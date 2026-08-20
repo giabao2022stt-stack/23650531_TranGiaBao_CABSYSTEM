@@ -304,6 +304,84 @@ quadrantChart
 > **Nhóm cần ưu tiên cao nhất là Management, Business Owner, Operations, BA và Administrator**, vì có mức độ ảnh hưởng và mức độ tham gia cao đối với phạm vi, quy trình và quyết định của CAB System.
 >
 > Trong giai đoạn phân tích, BA cần đặc biệt phối hợp với **Business Owner, Operations, Customer, Driver, Finance và IT/Security** để xác nhận Business Rules, quy trình nghiệp vụ và các yêu cầu còn chưa rõ.
+Bước 3: xác định  bussines goal ,BG01 là cái gì, BG02 là cái gì, làm giảm thời gian tự động tìm tài xế ,mục đích hệ thống có chức năng tìm tài xế, hỗ trợ cho phép thanh toán bằng tiền mặt hoặc trực tuyến 
+# BƯỚC 3 – XÁC ĐỊNH BUSINESS GOALS
+
+## 1. Business Goals
+
+| ID | Business Goal | Mục tiêu |
+|---|---|---|
+| **BG01** | **Giảm thời gian tìm và phân công tài xế** | Tự động hóa quá trình tìm kiếm và phân công tài xế phù hợp, giảm thời gian chờ của khách hàng và hạn chế phân công thủ công. |
+| **BG02** | **Tự động hóa quy trình tìm tài xế** | Tự động tìm, ưu tiên và phân công tài xế dựa trên vị trí, trạng thái sẵn sàng và các tiêu chí vận hành. |
+| **BG03** | **Đa dạng hóa phương thức thanh toán** | Hỗ trợ khách hàng thanh toán bằng **tiền mặt hoặc thanh toán điện tử**. |
+| **BG04** | **Nâng cao trải nghiệm khách hàng** | Cho phép khách hàng theo dõi trạng thái chuyến, thông tin tài xế và thời gian dự kiến đến. |
+| **BG05** | **Nâng cao hiệu quả vận hành** | Hỗ trợ quản lý khách hàng, tài xế, phương tiện, chuyến đi, giao dịch và báo cáo. |
+| **BG06** | **Xây dựng nền tảng CAB có khả năng mở rộng** | Cho phép mở rộng số lượng người dùng, tài xế, chuyến đi và bổ sung các dịch vụ mới trong tương lai. |
+| **BG07** | **Đảm bảo an toàn và tin cậy** | Bảo vệ dữ liệu người dùng, vị trí và giao dịch; hạn chế ảnh hưởng khi Payment hoặc Notification gặp lỗi. |
+
+---
+
+## 2. Ưu tiên Business Goals
+
+| Priority | Business Goal | Mức độ |
+|---|---|---|
+| **P1** | BG01 – Giảm thời gian tìm và phân công tài xế | 🔴 Critical |
+| **P1** | BG02 – Tự động hóa tìm tài xế | 🔴 Critical |
+| **P1** | BG03 – Hỗ trợ thanh toán tiền mặt / trực tuyến | 🔴 Critical |
+| **P1** | BG04 – Nâng cao trải nghiệm khách hàng | 🔴 Critical |
+| **P2** | BG05 – Nâng cao hiệu quả vận hành | 🟠 High |
+| **P2** | BG06 – Khả năng mở rộng | 🟠 High |
+| **P2** | BG07 – An toàn và tin cậy | 🟠 High |
+
+---
+
+## 3. Liên kết Business Goal với chức năng hệ thống
+
+```mermaid
+flowchart LR
+    BG01["BG01<br/>Giảm thời gian tìm & phân công Driver"]
+    BG02["BG02<br/>Tự động hóa tìm Driver"]
+    BG03["BG03<br/>Thanh toán tiền mặt / trực tuyến"]
+    BG04["BG04<br/>Nâng cao trải nghiệm Customer"]
+    BG05["BG05<br/>Nâng cao hiệu quả vận hành"]
+    BG06["BG06<br/>Khả năng mở rộng"]
+    BG07["BG07<br/>An toàn & tin cậy"]
+
+    DM["Driver Matching"]
+    BT["Booking & Trip Management"]
+    PM["Payment"]
+    NT["Notification"]
+    OM["Operation Management"]
+    RP["Reporting"]
+    SC["Scalable Architecture"]
+    SEC["Security & Audit"]
+
+    BG01 --> DM
+    BG02 --> DM
+    BG02 --> BT
+    BG03 --> PM
+    BG04 --> BT
+    BG04 --> NT
+    BG05 --> OM
+    BG05 --> RP
+    BG06 --> SC
+    BG07 --> SEC
+    BG07 --> PM
+```
+
+---
+
+## 4. Kết luận
+
+> **Ba Business Goals cốt lõi của dự án CAB:**
+>
+> - **BG01:** Giảm thời gian tìm và phân công tài xế.
+> - **BG02:** Tự động hóa quá trình tìm và phân công tài xế.
+> - **BG03:** Hỗ trợ thanh toán linh hoạt bằng tiền mặt và trực tuyến.
+
+Các Business Goals là cơ sở để BA tiếp tục xác định:
+
+**Business Goal → Business Requirement → Functional Requirement → Use Case → Acceptance Criteria**
 
 
 
