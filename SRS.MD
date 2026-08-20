@@ -1450,3 +1450,434 @@ Trong đó, nhóm **Driver Matching** cần được ưu tiên đặc tả chi t
 > **Xác định vị trí Customer → Lọc Driver Online → Lọc loại xe → Tính khoảng cách → Xếp hạng Driver → Ưu tiên Driver phù hợp → Gửi yêu cầu → Accept / Reject / Timeout → Tìm Driver tiếp theo → Thông báo Customer.**
 
 > **Lưu ý:** Việc “ưu tiên Driver có Rating cao” hiện nên được xem là **đề xuất nghiệp vụ cần xác nhận với khách hàng**, chưa nên coi là Business Rule chính thức nếu khách hàng chưa phê duyệt.
+bước 8 : thiết kế Business rule, và thiết kế Accession, ví dụ các tài xế sẫn sàng mới được nhận chuyến,quá thời hạn tài xế không chịu access thì sẽ restar qua thằng tài xế tiếp theo, làm theo dạng markdow 
+# BƯỚC 8 – THIẾT KẾ BUSINESS RULE & ACCEPTANCE CRITERIA
+
+## 1. Mục tiêu
+
+Xác định các **Business Rules (BRL)** và **Acceptance Criteria (AC)** cho các Functional Requirements đã được phân rã ở Bước 7.
+
+```text
+Business Requirement
+        ↓
+Functional Requirement
+        ↓
+Business Rule
+        ↓
+Acceptance Criteria
+        ↓
+Test Case
+```
+
+---
+
+# 2. Business Rules
+
+## 2.1. Driver Matching Rules
+
+| Mã | Business Rule | Diễn giải |
+|---|---|---|
+| **BRL01** | Driver phải ở trạng thái Available | Chỉ Driver đang sẵn sàng nhận chuyến mới được đưa vào danh sách tìm kiếm. |
+| **BRL02** | Driver phải phù hợp loại xe | Driver chỉ được đề xuất nếu phương tiện đáp ứng loại xe/dịch vụ Customer yêu cầu. |
+| **BRL03** | Driver phải đáp ứng điều kiện vận hành | Driver phải đáp ứng các điều kiện hoạt động do doanh nghiệp quy định. |
+| **BRL04** | Ưu tiên Driver phù hợp và gần Customer | Hệ thống phải ưu tiên các Driver đáp ứng điều kiện và có vị trí phù hợp với điểm đón. |
+| **BRL05** | Driver chỉ nhận một Booking tại một thời điểm | Khi Driver đã được gán Booking, Driver không được đồng thời nhận Booking khác. |
+| **BRL06** | Driver phải phản hồi trong thời gian quy định | Driver phải Accept hoặc Reject Booking trong khoảng thời gian được cấu hình. |
+| **BRL07** | Driver Timeout được xem là không phản hồi | Nếu Driver không phản hồi trước thời hạn, Booking được chuyển sang Driver tiếp theo. |
+| **BRL08** | Driver Reject → tìm Driver tiếp theo | Nếu Driver từ chối, hệ thống không yêu cầu Customer tạo lại Booking. |
+| **BRL09** | Không tìm được Driver → thông báo Customer | Khi không còn Driver phù hợp, hệ thống phải thông báo rõ cho Customer. |
+| **BRL10** | Không gửi trùng Booking cho cùng Driver | Hệ thống không gửi lại cùng một yêu cầu cho Driver đã Reject hoặc Timeout trong cùng vòng tìm kiếm. |
+
+---
+
+# 3. Booking Rules
+
+| Mã | Business Rule | Diễn giải |
+|---|---|---|
+| **BRL11** | Booking phải có Pickup | Customer phải cung cấp điểm đón hợp lệ. |
+| **BRL12** | Booking phải có Destination | Customer phải cung cấp điểm đến hợp lệ. |
+| **BRL13** | Booking phải có Service Type | Customer phải lựa chọn loại xe/dịch vụ trước khi tạo Booking. |
+| **BRL14** | Một Booking chỉ có một trạng thái hiện tại | Hệ thống phải đảm bảo trạng thái Booking nhất quán. |
+| **BRL15** | Booking được tạo mới phải bắt đầu Driver Matching | Sau khi Booking được xác nhận, hệ thống tự động bắt đầu tìm Driver. |
+
+---
+
+# 4. Trip Rules
+
+| Mã | Business Rule | Diễn giải |
+|---|---|---|
+| **BRL16** | Chỉ Driver được phân công mới được thực hiện Trip | Driver khác không được cập nhật trạng thái Trip. |
+| **BRL17** | Trip phải tuân thủ thứ tự trạng thái | Driver phải cập nhật trạng thái theo trình tự nghiệp vụ được quy định. |
+| **BRL18** | Driver phải đến điểm đón trước khi bắt đầu Trip | Driver không được chuyển sang trạng thái thực hiện Trip nếu chưa xác nhận đón Customer. |
+| **BRL19** | Trip chỉ được hoàn thành khi đủ điều kiện | Trip chỉ chuyển sang COMPLETED khi Driver hoàn tất chuyến theo quy định. |
+| **BRL20** | Trip Completed không được tiếp tục thực hiện | Trip đã hoàn thành không thể quay lại trạng thái đang thực hiện. |
+
+---
+
+# 5. Payment Rules
+
+| Mã | Business Rule | Diễn giải |
+|---|---|---|
+| **BRL21** | Fare phải được xác định trước khi thanh toán | Hệ thống phải xác định số tiền Customer cần thanh toán. |
+| **BRL22** | Hỗ trợ Cash và Online Payment | Customer có thể lựa chọn phương thức thanh toán được doanh nghiệp hỗ trợ. |
+| **BRL23** | Online Payment phải thông qua Payment Provider | CAB không trực tiếp xử lý thông tin thanh toán nhạy cảm. |
+| **BRL24** | Không lưu thông tin thẻ nhạy cảm | CAB không được lưu trực tiếp số thẻ hoặc thông tin xác thực thanh toán nhạy cảm. |
+| **BRL25** | Payment Failed phải được ghi nhận | Hệ thống phải lưu trạng thái giao dịch thất bại và thông báo Customer. |
+| **BRL26** | Payment Retry theo chính sách | Customer được phép thực hiện lại thanh toán nếu chính sách doanh nghiệp cho phép. |
+
+---
+
+# 6. Notification Rules
+
+| Mã | Business Rule | Diễn giải |
+|---|---|---|
+| **BRL27** | Booking được tiếp nhận phải có Notification | Customer phải được thông báo khi hệ thống tiếp nhận Booking. |
+| **BRL28** | Driver được đề xuất phải nhận Notification | Driver phù hợp phải được thông báo khi có Booking mới. |
+| **BRL29** | Driver Accept phải thông báo Customer | Customer phải nhận được thông tin Driver đã nhận chuyến. |
+| **BRL30** | Driver đến điểm đón phải thông báo Customer | Customer phải được thông báo khi Driver xác nhận đã đến. |
+| **BRL31** | Payment Result phải thông báo Customer | Customer phải nhận được kết quả thanh toán. |
+| **BRL32** | Notification Failure không làm dừng Trip | Lỗi Notification không được làm gián đoạn Booking hoặc Trip. |
+
+---
+
+# 7. Security & Authorization Rules
+
+| Mã | Business Rule | Diễn giải |
+|---|---|---|
+| **BRL33** | User phải được xác thực | Customer, Driver và Staff phải đăng nhập trước khi sử dụng chức năng yêu cầu tài khoản. |
+| **BRL34** | Chức năng phải kiểm tra quyền | User chỉ được thực hiện chức năng mà Role của mình được cấp quyền. |
+| **BRL35** | Chức năng nhạy cảm phải được phân quyền | Các thao tác quản trị quan trọng chỉ dành cho Role được cấp quyền. |
+| **BRL36** | Thao tác quan trọng phải được Audit | Các thao tác quản trị và thay đổi dữ liệu quan trọng phải được ghi nhận Audit Log. |
+
+---
+
+# 8. Acceptance Criteria
+
+## AC01 – Driver phải Available
+
+**Functional Requirement:** FR02 – Xác định Driver Online/Available
+
+### Given
+Driver có trạng thái:
+- Available
+- Offline
+- Busy
+
+### When
+Customer tạo Booking.
+
+### Then
+Hệ thống chỉ đưa Driver **Available** vào danh sách Driver có thể nhận chuyến.
+
+```text
+Available → Có thể được chọn
+Offline   → Không được chọn
+Busy      → Không được chọn
+```
+
+---
+
+## AC02 – Driver phải phù hợp loại xe
+
+**Functional Requirement:** FR03 – Lọc Driver theo loại xe
+
+### Given
+Customer yêu cầu một loại xe cụ thể.
+
+### When
+Hệ thống thực hiện Driver Matching.
+
+### Then
+Hệ thống chỉ lựa chọn Driver có phương tiện phù hợp với loại xe Customer yêu cầu.
+
+---
+
+## AC03 – Ưu tiên Driver phù hợp
+
+**Functional Requirement:** FR05 – Ưu tiên Driver phù hợp
+
+### Given
+Có nhiều Driver Available và đáp ứng điều kiện.
+
+### When
+Hệ thống thực hiện Driver Matching.
+
+### Then
+Hệ thống phải xếp hạng Driver theo các tiêu chí ưu tiên đã được doanh nghiệp cấu hình.
+
+> **Lưu ý:** Thứ tự ưu tiên cụ thể cần được khách hàng xác nhận.
+
+---
+
+# 9. Acceptance Criteria – Driver Accept
+
+## AC04 – Driver Accept Booking
+
+**Functional Requirement:** FR08 – Nhận phản hồi Driver
+
+### Given
+Driver đang Available và nhận được Booking.
+
+### When
+Driver chọn **Accept** trong thời gian quy định.
+
+### Then
+
+1. Hệ thống ghi nhận Driver đã Accept.
+2. Booking được gán cho Driver.
+3. Driver chuyển sang trạng thái phù hợp, ví dụ `BUSY/ON_TRIP`.
+4. Các Driver khác không được tiếp tục nhận Booking này.
+5. Customer nhận được Notification.
+6. Booking chuyển sang trạng thái `DRIVER_ASSIGNED`.
+
+---
+
+# 10. Acceptance Criteria – Driver Reject
+
+## AC05 – Driver Reject Booking
+
+**Functional Requirement:** FR10 – Tìm Driver tiếp theo
+
+### Given
+Driver nhận được Booking.
+
+### When
+Driver chọn **Reject**.
+
+### Then
+
+1. Hệ thống ghi nhận Reject.
+2. Driver không được gán vào Booking.
+3. Hệ thống tìm Driver phù hợp tiếp theo.
+4. Customer không cần tạo lại Booking.
+5. Booking tiếp tục ở trạng thái tìm Driver.
+
+```text
+Driver Reject
+      ↓
+Ghi nhận Reject
+      ↓
+Tìm Driver tiếp theo
+      ↓
+Có Driver?
+   ┌──┴──┐
+   ↓     ↓
+  Có    Không
+   ↓      ↓
+Gửi     Thông báo
+Booking Customer
+```
+
+---
+
+# 11. Acceptance Criteria – Driver Timeout
+
+## AC06 – Driver không phản hồi
+
+**Functional Requirement:** FR09 – Xử lý Driver Timeout
+
+### Given
+Hệ thống đã gửi Booking cho Driver.
+
+### When
+Driver không Accept hoặc Reject trước thời hạn phản hồi.
+
+### Then
+
+1. Hệ thống xác định Driver đã `TIMEOUT`.
+2. Booking không được gán cho Driver đó.
+3. Hệ thống chuyển sang tìm Driver tiếp theo.
+4. Customer không cần tạo lại Booking.
+5. Hệ thống ghi nhận lịch sử Timeout.
+
+```text
+Send Booking
+     ↓
+Wait Response
+     ↓
+Timeout?
+     ↓
+YES
+     ↓
+Driver = TIMEOUT
+     ↓
+Tìm Driver tiếp theo
+     ↓
+Nếu không còn Driver
+     ↓
+Thông báo Customer
+```
+
+> **Thời gian Timeout cụ thể** cần được khách hàng xác nhận, ví dụ: 15 giây, 20 giây hoặc 30 giây.
+
+---
+
+# 12. Acceptance Criteria – Không tìm được Driver
+
+## AC07 – No Driver Available
+
+**Functional Requirement:** FR11 – Thông báo không tìm được Driver
+
+### Given
+Customer đã tạo Booking.
+
+### When
+Hệ thống không tìm thấy Driver phù hợp hoặc tất cả Driver đã Reject/Timeout.
+
+### Then
+
+1. Booking chuyển sang trạng thái `NO_DRIVER_AVAILABLE`.
+2. Hệ thống thông báo cho Customer.
+3. Hệ thống không tiếp tục gửi Booking đến Driver không phù hợp.
+4. Customer có thể thực hiện lại yêu cầu theo chính sách doanh nghiệp.
+
+---
+
+# 13. Acceptance Criteria – Payment
+
+## AC08 – Payment Success
+
+### Given
+Trip đã hoàn thành và Fare đã được xác định.
+
+### When
+Customer thanh toán Online thành công.
+
+### Then
+
+1. Payment chuyển sang `SUCCESS`.
+2. Hệ thống lưu Transaction ID.
+3. Customer nhận Notification.
+4. Trip/Payment được cập nhật trạng thái phù hợp.
+
+---
+
+## AC09 – Payment Failed
+
+### Given
+Customer chọn Online Payment.
+
+### When
+Payment Provider trả về kết quả `FAILED`.
+
+### Then
+
+1. Hệ thống ghi nhận Payment Failed.
+2. Customer nhận Notification.
+3. Trip không bị mất dữ liệu.
+4. Customer được phép Retry nếu chính sách cho phép.
+
+---
+
+# 14. Acceptance Criteria – Notification
+
+## AC10 – Notification Failure
+
+### Given
+Hệ thống cần gửi Notification.
+
+### When
+Notification Provider không phản hồi hoặc gửi thất bại.
+
+### Then
+
+1. Hệ thống ghi nhận Notification Failed.
+2. Hệ thống thực hiện Retry theo chính sách.
+3. Booking/Trip vẫn tiếp tục hoạt động.
+4. Lỗi Notification không làm dừng toàn bộ hệ thống.
+
+---
+
+# 15. State Transition – Driver Matching
+
+```mermaid
+stateDiagram-v2
+    [*] --> SEARCHING_DRIVER
+
+    SEARCHING_DRIVER --> DRIVER_REQUESTED: Chọn Driver phù hợp
+
+    DRIVER_REQUESTED --> DRIVER_ASSIGNED: Driver Accept
+    DRIVER_REQUESTED --> DRIVER_REJECTED: Driver Reject
+    DRIVER_REQUESTED --> DRIVER_TIMEOUT: Hết thời gian phản hồi
+
+    DRIVER_REJECTED --> SEARCHING_DRIVER: Tìm Driver tiếp theo
+    DRIVER_TIMEOUT --> SEARCHING_DRIVER: Tìm Driver tiếp theo
+
+    SEARCHING_DRIVER --> NO_DRIVER_AVAILABLE: Không còn Driver phù hợp
+
+    DRIVER_ASSIGNED --> [*]
+    NO_DRIVER_AVAILABLE --> [*]
+```
+
+---
+
+# 16. Tổng hợp Business Rule → Acceptance Criteria
+
+| Business Rule | Acceptance Criteria |
+|---|---|
+| **BRL01** – Driver phải Available | **AC01** |
+| **BRL02** – Driver phù hợp loại xe | **AC02** |
+| **BRL04** – Ưu tiên Driver phù hợp | **AC03** |
+| **BRL06** – Driver phải phản hồi đúng hạn | **AC06** |
+| **BRL07** – Driver Timeout | **AC06** |
+| **BRL08** – Driver Reject | **AC05** |
+| **BRL09** – Không tìm được Driver | **AC07** |
+| **BRL22** – Cash / Online Payment | **AC08, AC09** |
+| **BRL25** – Payment Failed | **AC09** |
+| **BRL32** – Notification Failure | **AC10** |
+
+---
+
+# 17. Các Business Rules cần xác nhận với Customer
+
+Một số Rule hiện chưa thể chốt và cần BA xác nhận:
+
+| # | Nội dung cần xác nhận |
+|---|---|
+| **1** | Driver phải phản hồi trong bao nhiêu giây? |
+| **2** | Sau Timeout có chuyển ngay sang Driver tiếp theo không? |
+| **3** | Tối đa bao nhiêu Driver được thử cho một Booking? |
+| **4** | Ưu tiên khoảng cách hay Rating của Driver? |
+| **5** | Có xét hiệu suất/Acceptance Rate của Driver không? |
+| **6** | Driver Reject có bị ảnh hưởng đến Rating/Performance không? |
+| **7** | Customer có được hủy Booking trong quá trình tìm Driver không? |
+| **8** | Khi không tìm được Driver, Customer có được Retry Booking không? |
+| **9** | Payment Failed được Retry bao nhiêu lần? |
+| **10** | Notification Failed được Retry bao nhiêu lần? |
+
+---
+
+# 18. Kết luận
+
+Bước 8 giúp chuyển Functional Requirements thành các **quy tắc có thể kiểm chứng**.
+
+Đặc biệt với Driver Matching, quy tắc cốt lõi là:
+
+```text
+Driver phải Available
+        ↓
+Phù hợp loại xe
+        ↓
+Đáp ứng tiêu chí vận hành
+        ↓
+Xếp hạng / ưu tiên
+        ↓
+Gửi Booking
+        ↓
+┌───────────────┐
+│ Driver Reply  │
+└───────┬───────┘
+        ↓
+ Accept / Reject / Timeout
+        ↓
+Reject / Timeout
+        ↓
+Tìm Driver tiếp theo
+        ↓
+Không còn Driver
+        ↓
+Thông báo Customer
+```
+
+> **Kết quả đầu ra của Bước 8:** Business Rules + Acceptance Criteria là cơ sở để BA viết **Use Case Specification**, còn QA có thể sử dụng Acceptance Criteria để xây dựng **Test Case**.
+
