@@ -598,6 +598,110 @@ Các chức năng này nâng cao trải nghiệm và hiệu quả vận hành nh
 **Customer tạo Booking → Driver Matching → Driver nhận chuyến → Trip Completed → Fare → Payment → Notification**
 
 Nếu tiến độ bị ảnh hưởng, các chức năng thuộc nhóm **Could Have** sẽ được cắt giảm trước, **không cắt các chức năng Must Have của Core Flow**.
+Bước 5 : sau khi xác nhận với khách hàng rồi chuyển các yêu cầu thành bussines requirement, mối busines requirement kí hiệu là BG, BG01 là gì, BG02 là gì, BG03 là gì, lập 1 bảng  cột thứ nhất là mã với số thứ tự,cột thứ 2 là tên,cột thứ 3 là diễn giải ra 
+# BƯỚC 5 – XÁC ĐỊNH BUSINESS REQUIREMENTS
 
+## 1. Business Requirements
+
+Sau khi phân tích và xác nhận yêu cầu với khách hàng, các mục tiêu kinh doanh được chuyển thành các **Business Requirements (BR)** để làm cơ sở cho việc phân rã thành Functional Requirements và Use Cases.
+
+| Mã | Tên Business Requirement | Diễn giải |
+|---|---|---|
+| **BR01** | **Tự động tìm và phân công tài xế** | Hệ thống phải tự động tìm kiếm và phân công tài xế phù hợp dựa trên vị trí, trạng thái sẵn sàng và các tiêu chí vận hành đã xác định. |
+| **BR02** | **Giảm thời gian tìm tài xế** | Hệ thống phải giảm thời gian từ khi khách hàng tạo yêu cầu đến khi tìm được tài xế; nếu tài xế từ chối hoặc không phản hồi, hệ thống phải tiếp tục tìm tài xế khác. |
+| **BR03** | **Hỗ trợ thanh toán linh hoạt** | Hệ thống phải cho phép khách hàng thanh toán bằng tiền mặt hoặc phương thức thanh toán điện tử thông qua nhà cung cấp thanh toán bên ngoài. |
+| **BR04** | **Nâng cao trải nghiệm khách hàng** | Hệ thống phải cho phép khách hàng theo dõi trạng thái chuyến, thông tin tài xế, thời gian dự kiến đến, số tiền phải trả và lịch sử chuyến đi. |
+| **BR05** | **Nâng cao hiệu quả vận hành** | Hệ thống phải hỗ trợ nhân viên vận hành quản lý khách hàng, tài xế, phương tiện, chuyến đi, giao dịch và xử lý các trường hợp phát sinh. |
+| **BR06** | **Cung cấp thông báo kịp thời** | Hệ thống phải thông báo cho khách hàng và tài xế về các sự kiện quan trọng như tiếp nhận Booking, nhận chuyến, tài xế đến điểm đón, hoàn thành chuyến và kết quả thanh toán. |
+| **BR07** | **Đảm bảo khả năng mở rộng** | Hệ thống phải có khả năng mở rộng số lượng khách hàng, tài xế và chuyến đi; đồng thời cho phép bổ sung dịch vụ, phương thức thanh toán và kênh thông báo trong tương lai. |
+| **BR08** | **Đảm bảo an toàn và bảo mật** | Hệ thống phải bảo vệ thông tin cá nhân, thông tin phương tiện, dữ liệu vị trí và dữ liệu giao dịch; đồng thời kiểm soát quyền truy cập các chức năng quản trị. |
+| **BR09** | **Đảm bảo khả năng vận hành và báo cáo** | Hệ thống phải cung cấp dữ liệu và báo cáo về số lượng chuyến, doanh thu, tỷ lệ hoàn thành, tỷ lệ hủy và hiệu quả hoạt động của tài xế. |
+| **BR10** | **Đảm bảo tính tin cậy của hệ thống** | Lỗi tại Payment hoặc Notification không được làm gián đoạn toàn bộ hệ thống đặt xe; hệ thống phải có cơ chế xử lý lỗi phù hợp. |
+
+---
+
+## 2. Business Requirement Priority
+
+| Mã | Priority | Mức độ |
+|---|---|---|
+| **BR01** | P1 | Critical |
+| **BR02** | P1 | Critical |
+| **BR03** | P1 | Critical |
+| **BR04** | P1 | Critical |
+| **BR05** | P1 | Critical |
+| **BR06** | P1 | Critical |
+| **BR07** | P2 | High |
+| **BR08** | P1 | Critical |
+| **BR09** | P2 | High |
+| **BR10** | P1 | Critical |
+
+---
+
+## 3. Phân rã Business Requirement
+
+```mermaid
+flowchart TD
+    BG["Business Goals"]
+
+    BG --> BR01["BR01<br/>Tự động tìm & phân công Driver"]
+    BG --> BR02["BR02<br/>Giảm thời gian tìm Driver"]
+    BG --> BR03["BR03<br/>Thanh toán linh hoạt"]
+    BG --> BR04["BR04<br/>Nâng cao trải nghiệm Customer"]
+    BG --> BR05["BR05<br/>Nâng cao hiệu quả vận hành"]
+    BG --> BR06["BR06<br/>Thông báo kịp thời"]
+    BG --> BR07["BR07<br/>Khả năng mở rộng"]
+    BG --> BR08["BR08<br/>An toàn & bảo mật"]
+    BG --> BR09["BR09<br/>Vận hành & báo cáo"]
+    BG --> BR10["BR10<br/>Tính tin cậy"]
+
+    BR01 --> DM["Driver Matching"]
+    BR02 --> DM
+
+    BR03 --> PM["Payment"]
+
+    BR04 --> TM["Trip Management"]
+    BR04 --> NT["Notification"]
+
+    BR05 --> OM["Operation Management"]
+
+    BR06 --> NT
+
+    BR07 --> SC["Scalable Architecture"]
+
+    BR08 --> SEC["Security & Authorization"]
+
+    BR09 --> RP["Reporting"]
+
+    BR10 --> RES["Resilience & Fault Handling"]
+```
+
+---
+
+## 4. Kết luận
+
+Các **Business Requirements (BR)** là cơ sở để tiếp tục phân rã thành:
+
+```text
+Business Goal (BG)
+        ↓
+Business Requirement (BR)
+        ↓
+Functional Requirement (FR)
+        ↓
+Use Case (UC)
+        ↓
+Acceptance Criteria (AC)
+        ↓
+Test Case
+```
+
+> **Quy ước mã:**
+>
+> - **BGxx** → Business Goal
+> - **BRxx** → Business Requirement
+> - **FRxx** → Functional Requirement
+> - **NFRxx** → Non-functional Requirement
+> - **UCxx** → Use Case
+> - **ACxx** → Acceptance Criteria
 
 
