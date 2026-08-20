@@ -2726,6 +2726,7 @@ UC22	Audit Log	Administrator	Theo dõi thao tác quan trọng
 
 3. Use Case Diagram
 Code dưới đây có thể copy trực tiếp vào file .md trên GitHub.
+```mermaid
 
 flowchart LR
 
@@ -2802,6 +2803,7 @@ flowchart LR
     UC12 --> Location
     UC04 --> Payment
     UC14 --> Notification
+```
 
 BƯỚC 12 – ĐẶC TẢ USE CASE
 4. UC01 – Quản lý tài khoản Customer
