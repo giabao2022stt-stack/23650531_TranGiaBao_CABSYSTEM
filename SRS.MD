@@ -3139,3 +3139,191 @@ UC04 – Payment
 UC06 – Rating
 
 Bộ Use Case này là cơ sở để chuyển sang Acceptance Criteria → Test Case → Solution Design → Development.
+Bước 13: Acceptance Criteria những tiêu chí chấp nhận, mục đích của , xác định khi nào kết thúc và nghiệm thu,làm theo dạng markdow, code mermaid
+ChatGPT đã nói:
+BƯỚC 13 – XÁC ĐỊNH ACCEPTANCE CRITERIA
+1. Mục tiêu
+Acceptance Criteria (AC) là các tiêu chí dùng để xác định một yêu cầu đã được thực hiện đúng và đủ hay chưa.
+
+Acceptance Criteria giúp:
+
+Xác định rõ khi nào chức năng được xem là hoàn thành.
+Là cơ sở để khách hàng nghiệm thu.
+Là cơ sở để QA/Tester xây dựng Test Case.
+Tránh hiểu khác nhau giữa Business – BA – Developer – QA.
+Xác nhận Business Requirement và Functional Requirement đã được đáp ứng.
+2. Nguyên tắc xác định Acceptance Criteria
+Một Acceptance Criteria tốt phải:
+
+Tiêu chí	Mô tả
+Clear	Rõ ràng, không gây hiểu nhầm
+Testable	Có thể kiểm thử
+Measurable	Có thể đo lường khi cần
+Complete	Bao phủ Main Flow và Exception Flow
+Business-oriented	Phản ánh đúng mục tiêu nghiệp vụ
+Independent	Có thể xác nhận độc lập
+
+3. Acceptance Criteria chính của CAB System
+Mã AC	Use Case	Acceptance Criteria	Kết quả nghiệm thu
+AC01	UC01 – Customer Account	Customer có thể đăng ký, đăng nhập và cập nhật thông tin cá nhân hợp lệ	Pass khi các chức năng hoạt động đúng
+AC02	UC02 – Create Booking	Customer nhập điểm đón, điểm đến, loại xe và tạo Booking thành công	Booking được tạo và chuyển sang trạng thái tìm Driver
+AC03	UC12 – Driver Matching	Hệ thống tự động tìm Driver phù hợp dựa trên trạng thái, vị trí và loại xe	Driver phù hợp được tìm thấy
+AC04	UC12 – Driver Matching	Nếu Driver từ chối hoặc hết thời gian phản hồi, hệ thống phải tìm Driver tiếp theo	Không yêu cầu Customer tạo lại Booking
+AC05	UC12 – Driver Matching	Nếu không còn Driver phù hợp, hệ thống phải thông báo cho Customer	Customer nhận được thông báo
+AC06	UC09 – Accept/Reject	Driver Available có thể nhận hoặc từ chối Booking	Booking được xử lý đúng trạng thái
+AC07	UC10 – Trip	Driver có thể cập nhật các trạng thái của Trip theo đúng quy trình	Trạng thái Trip được cập nhật chính xác
+AC08	UC03 – Tracking	Customer có thể theo dõi Driver, vị trí và trạng thái Trip	Thông tin được cập nhật
+AC09	UC13 – Fare	Hệ thống tính đúng Fare theo Business Rule đã được xác nhận	Fare được lưu và hiển thị chính xác
+AC10	UC04 – Payment	Customer có thể thanh toán bằng tiền mặt hoặc thanh toán điện tử	Payment được ghi nhận đúng trạng thái
+AC11	UC04 – Payment	Khi thanh toán điện tử thất bại, hệ thống thông báo và xử lý Retry theo chính sách	Không làm dừng toàn bộ hệ thống
+AC12	UC14 – Notification	Customer/Driver nhận được thông báo tại các sự kiện quan trọng	Notification được gửi thành công
+AC13	UC06 – Rating	Customer chỉ được đánh giá Driver sau khi Trip hoàn thành	Rating được lưu hợp lệ
+AC14	UC18 – Operations	Operations có thể theo dõi và xử lý Trip	Dữ liệu hiển thị chính xác
+AC15	UC20 – Reporting	Hệ thống cung cấp các báo cáo theo yêu cầu	Báo cáo được tạo chính xác
+AC16	UC21 – Authorization	User chỉ được thực hiện chức năng đúng với Role/Permission	Truy cập trái quyền bị từ chối
+AC17	UC22 – Audit	Các thao tác quản trị quan trọng được ghi nhận Audit Log	Có thể truy vết User, Action, Time, Result
+
+4. Acceptance Criteria cho quy trình đặt xe
+Đây là Acceptance Criteria quan trọng nhất của CAB System.
+
+Không
+Có
+Có
+Không
+Accept
+Reject / Timeout
+Có
+Không
+Customer tạo Booking
+Nhập điểm đón
+Nhập điểm đến
+Chọn loại xe
+Booking hợp lệ?
+Tạo Booking
+UC12 - Driver Matching
+Tìm Driver phù hợp
+Có Driver?
+Gửi yêu cầu cho Driver
+Driver Accept?
+Assign Driver
+Thông báo Customer
+Driver Reject / Timeout
+Còn Driver phù hợp?
+Tìm Driver tiếp theo
+Thông báo CustomerKhông tìm được Driver
+Điều kiện nghiệm thu
+Quy trình được xem là đạt khi:
+
+Customer tạo được Booking hợp lệ.
+Hệ thống tự động tìm Driver.
+Chỉ Driver đủ điều kiện mới được đề xuất.
+Driver Accept → Booking được Assign.
+Driver Reject → hệ thống tìm Driver tiếp theo.
+Driver Timeout → hệ thống tìm Driver tiếp theo.
+Không còn Driver → Customer được thông báo.
+Customer không phải tạo lại Booking khi Driver Reject/Timeout.
+5. Acceptance Criteria cho thanh toán
+Cash
+Electronic
+Success
+Failed
+Trip COMPLETED
+Calculate Fare
+Customer chọn Payment Method
+Payment Method
+Cash Payment
+Electronic Payment
+Ghi nhận Cash Payment
+Payment Provider
+Payment Result
+Payment SUCCESS
+Payment FAILED
+Thông báo Customer
+Retry theo chính sách
+Điều kiện nghiệm thu
+Customer có thể chọn Cash hoặc Electronic Payment.
+Cash Payment được ghi nhận thành công.
+Electronic Payment được xử lý thông qua Payment Provider.
+Payment Success → ghi nhận giao dịch thành công.
+Payment Failed → thông báo Customer.
+Payment Failed không làm dừng Booking/Trip.
+CAB không lưu trực tiếp thông tin thẻ hoặc thông tin thanh toán nhạy cảm.
+6. Acceptance Criteria cho Security & Authorization
+Authorized
+Unauthorized
+User
+Authentication
+Role / Permission
+Access Function
+Deny Access
+Audit Log
+Điều kiện nghiệm thu
+Mã	Điều kiện
+AC-S01	User chưa đăng nhập không được truy cập chức năng yêu cầu authentication
+AC-S02	Customer chỉ được truy cập chức năng của Customer
+AC-S03	Driver chỉ được truy cập chức năng của Driver
+AC-S04	Operations chỉ được thực hiện chức năng được cấp quyền
+AC-S05	Administrator được phép thực hiện các chức năng quản trị theo Permission
+AC-S06	Thao tác quản trị quan trọng phải được ghi Audit Log
+
+7. Definition of Done – Điều kiện kết thúc
+Một Use Case/Requirement chỉ được xem là hoàn thành và sẵn sàng nghiệm thu khi:
+
+Không
+Có
+Requirement
+Development
+Unit Test
+Integration Test
+QA Test
+Acceptance Criteria
+Đạt?
+Fix / Retest
+Customer Acceptance
+DONE
+Điều kiện DONE
+ Requirement đã được xác nhận.
+ Functional Requirement đã được triển khai.
+ Main Flow hoạt động đúng.
+ Exception/Alternative Flow được xử lý.
+ Acceptance Criteria đạt.
+ QA/Tester xác nhận.
+ Không còn lỗi Critical/Blocker.
+ Customer/Business xác nhận nghiệm thu.
+8. Các tiêu chí cần xác nhận thêm với khách hàng
+Một số Acceptance Criteria hiện chưa thể chốt con số cụ thể vì Business Rule chưa được khách hàng xác nhận:
+
+STT	Nội dung cần xác nhận
+1	Thời gian tối đa Driver được phép Accept/Reject
+2	Thời gian tối đa cho Driver Matching
+3	Response Time của hệ thống
+4	Số lần Retry khi Driver không phản hồi
+5	Chính sách Retry Payment
+6	Chính sách Cancellation
+7	SLA/Availability
+8	Thời gian cập nhật Location
+9	Thời gian lưu dữ liệu
+10	Quy tắc tính Fare
+
+Lưu ý: Không nên tự đưa các con số như 3 giây, 10 giây, 99.9% vào Acceptance Criteria khi khách hàng chưa xác nhận. BA cần đưa các giá trị này vào Open Questions để chốt trước khi baseline requirement.
+
+9. Kết luận Bước 13
+Acceptance Criteria là cầu nối giữa Requirement → Development → QA → Customer Acceptance.
+
+Quy trình nghiệm thu của CAB:
+
+Business Requirement
+        ↓
+Functional Requirement
+        ↓
+Acceptance Criteria
+        ↓
+Development
+        ↓
+QA / Testing
+        ↓
+Customer Acceptance
+        ↓
+DONE
+
+Mục tiêu cuối cùng: xác định rõ hệ thống phải làm gì, làm như thế nào và điều kiện nào để khách hàng xác nhận là đã đạt yêu cầu.
