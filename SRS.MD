@@ -703,5 +703,400 @@ Test Case
 > - **NFRxx** → Non-functional Requirement
 > - **UCxx** → Use Case
 > - **ACxx** → Acceptance Criteria
+bước 6: xây dựng các cái bussines proess, ví dụ grab, đầu tiên là tạo chuyến đi, xác nhận điểm đón, điểm đến, tìm tài xế, tìm không ra thì thông báo, nếu tìm ra thì đợi tài xế chấp nhận, còn không chấp nhận thì thông báo, lưu ý grab là ví dụ thôi, làm theo dạng markdow 
+# BƯỚC 6 – XÂY DỰNG BUSINESS PROCESS
 
+## 1. Mục tiêu
+
+Xây dựng quy trình nghiệp vụ của **CAB System** từ khi khách hàng tạo yêu cầu đặt xe đến khi chuyến đi hoàn tất.
+
+### Business Process tổng quát
+
+```text
+Customer tạo yêu cầu
+        ↓
+Xác nhận điểm đón & điểm đến
+        ↓
+Chọn loại xe
+        ↓
+Tạo Booking
+        ↓
+Hệ thống tìm Driver
+        ↓
+ ┌──────┴──────┐
+ ↓             ↓
+Tìm thấy     Không tìm thấy
+ ↓             ↓
+Gửi yêu cầu   Thông báo Customer
+cho Driver    "Không có Driver"
+ ↓
+Driver phản hồi
+ ┌──────┴─────────┐
+ ↓                ↓
+Accept          Reject/Timeout
+ ↓                ↓
+Gán chuyến      Tìm Driver tiếp theo
+ ↓
+Driver đến điểm đón
+ ↓
+Đón Customer
+ ↓
+Thực hiện chuyến
+ ↓
+Hoàn thành
+ ↓
+Tính cước
+ ↓
+Thanh toán
+ ↓
+Đánh giá
+ ↓
+Kết thúc
+```
+
+---
+
+# 2. Business Process – Đặt xe
+
+## BP01 – Tạo yêu cầu đặt xe
+
+**Actor:** Customer
+
+### Luồng chính
+
+1. Customer đăng nhập hệ thống.
+2. Customer nhập **điểm đón**.
+3. Customer nhập **điểm đến**.
+4. Hệ thống xác nhận thông tin vị trí.
+5. Customer lựa chọn **loại xe/dịch vụ**.
+6. Hệ thống hiển thị thông tin đặt xe.
+7. Customer xác nhận đặt xe.
+8. Hệ thống tạo Booking.
+9. Booking chuyển sang trạng thái **SEARCHING_DRIVER**.
+10. Hệ thống bắt đầu tìm Driver.
+
+### Ngoại lệ
+
+- Điểm đón không hợp lệ.
+- Điểm đến không hợp lệ.
+- Không xác định được vị trí.
+- Loại xe không khả dụng.
+- Customer mất kết nối khi tạo Booking.
+
+---
+
+# 3. Business Process – Tìm và phân công Driver
+
+## BP02 – Driver Matching
+
+Đây là **Business Process quan trọng nhất** của hệ thống.
+
+### Luồng chính
+
+1. Hệ thống nhận Booking.
+2. Xác định danh sách Driver phù hợp.
+3. Kiểm tra:
+   - Driver đang Online/Available.
+   - Driver có loại xe phù hợp.
+   - Driver nằm trong khu vực phù hợp.
+   - Các tiêu chí vận hành khác.
+4. Hệ thống xếp hạng Driver.
+5. Chọn Driver ưu tiên.
+6. Gửi yêu cầu chuyến đến Driver.
+7. Chờ Driver phản hồi.
+
+### Driver Accept
+
+```text
+Driver Accept
+     ↓
+Gán Driver cho Booking
+     ↓
+Thông báo Customer
+     ↓
+Driver bắt đầu đến điểm đón
+```
+
+### Driver Reject / Timeout
+
+```text
+Driver Reject / Timeout
+          ↓
+Hủy yêu cầu với Driver hiện tại
+          ↓
+Tìm Driver tiếp theo
+          ↓
+Có Driver?
+    ┌─────┴─────┐
+   Có          Không
+    ↓             ↓
+Gửi yêu cầu    Thông báo
+Driver tiếp    Customer
+theo           không tìm thấy Driver
+```
+
+### Quy tắc quan trọng
+
+> Customer **không cần tạo lại Booking** khi Driver từ chối hoặc không phản hồi.
+
+---
+
+# 4. Business Process – Thực hiện chuyến
+
+## BP03 – Trip Execution
+
+Sau khi Driver nhận chuyến:
+
+```text
+DRIVER_ASSIGNED
+       ↓
+DRIVER_ARRIVING
+       ↓
+DRIVER_ARRIVED
+       ↓
+PASSENGER_PICKED_UP
+       ↓
+IN_PROGRESS
+       ↓
+COMPLETED
+```
+
+### Chi tiết
+
+| Trạng thái | Ý nghĩa |
+|---|---|
+| **DRIVER_ASSIGNED** | Driver đã nhận và được gán vào Booking |
+| **DRIVER_ARRIVING** | Driver đang di chuyển đến điểm đón |
+| **DRIVER_ARRIVED** | Driver đã đến điểm đón |
+| **PASSENGER_PICKED_UP** | Customer đã lên xe |
+| **IN_PROGRESS** | Chuyến đang được thực hiện |
+| **COMPLETED** | Chuyến đã hoàn thành |
+
+---
+
+# 5. Business Process – Tính cước
+
+## BP04 – Fare Calculation
+
+Khi Trip hoàn thành:
+
+```text
+Trip Completed
+      ↓
+Thu thập thông tin Trip
+      ↓
+Xác định loại dịch vụ
+      ↓
+Tính Fare
+      ↓
+Xác định số tiền phải trả
+      ↓
+Hiển thị Fare cho Customer
+```
+
+### Các yếu tố có thể ảnh hưởng đến Fare
+
+- Loại dịch vụ.
+- Khoảng cách.
+- Thời gian.
+- Phụ phí.
+- Chính sách giá của doanh nghiệp.
+
+> **Lưu ý:** Công thức tính cước cụ thể vẫn cần được xác nhận với Business Owner.
+
+---
+
+# 6. Business Process – Thanh toán
+
+## BP05 – Payment
+
+Customer có thể lựa chọn:
+
+### Thanh toán tiền mặt
+
+```text
+Fare được xác định
+       ↓
+Customer thanh toán tiền mặt
+       ↓
+Driver / System xác nhận
+       ↓
+Payment = SUCCESS
+```
+
+### Thanh toán điện tử
+
+```text
+Fare được xác định
+       ↓
+Customer chọn Payment Online
+       ↓
+CAB gửi yêu cầu Payment Provider
+       ↓
+Payment Provider xử lý
+       ↓
+ ┌─────────────┴─────────────┐
+ ↓                           ↓
+SUCCESS                    FAILED
+ ↓                           ↓
+Cập nhật Payment          Thông báo Customer
+ ↓                           ↓
+Hoàn tất                    Retry / Xử lý
+```
+
+### Quy tắc
+
+> CAB không lưu trực tiếp thông tin nhạy cảm của thẻ hoặc tài khoản thanh toán.
+
+---
+
+# 7. Business Process – Notification
+
+## BP06 – Notification
+
+Hệ thống gửi thông báo dựa trên các sự kiện nghiệp vụ.
+
+| Event | Customer | Driver |
+|---|:---:|:---:|
+| Booking được tiếp nhận | ✅ | |
+| Có yêu cầu chuyến mới | | ✅ |
+| Driver nhận chuyến | ✅ | |
+| Driver đến điểm đón | ✅ | |
+| Trip thay đổi trạng thái | ✅ | ✅ |
+| Trip hoàn thành | ✅ | |
+| Payment thành công | ✅ | |
+| Payment thất bại | ✅ | |
+| Không tìm được Driver | ✅ | |
+
+### Kiến trúc nghiệp vụ
+
+```text
+Business Event
+      ↓
+Notification Service
+      ↓
+Notification Provider
+      ↓
+Push / SMS / Email
+```
+
+---
+
+# 8. Business Process – Rating
+
+## BP07 – Đánh giá Driver
+
+```text
+Trip = COMPLETED
+       ↓
+Customer nhận yêu cầu đánh giá
+       ↓
+Customer đánh giá Driver
+       ↓
+Hệ thống lưu Rating
+       ↓
+Kết thúc
+```
+
+### Business Rule
+
+> Customer chỉ được đánh giá Driver sau khi Trip hoàn thành.
+
+---
+
+# 9. Business Process tổng thể
+
+```mermaid
+flowchart TD
+    START([Customer bắt đầu]) --> BOOK["Tạo Booking"]
+    BOOK --> LOCATION["Nhập & xác nhận<br/>Pickup / Destination"]
+    LOCATION --> SERVICE["Chọn loại xe"]
+    SERVICE --> CONFIRM["Xác nhận đặt xe"]
+    CONFIRM --> SEARCH["Tìm Driver"]
+
+    SEARCH --> FOUND{"Có Driver phù hợp?"}
+
+    FOUND -- "Không" --> NO_DRIVER["Thông báo Customer<br/>Không tìm được Driver"]
+    NO_DRIVER --> END1([Kết thúc])
+
+    FOUND -- "Có" --> REQUEST["Gửi yêu cầu cho Driver"]
+    REQUEST --> RESPONSE{"Driver phản hồi?"}
+
+    RESPONSE -- "Accept" --> ASSIGNED["Gán Driver"]
+    RESPONSE -- "Reject / Timeout" --> NEXT["Tìm Driver tiếp theo"]
+    NEXT --> SEARCH
+
+    ASSIGNED --> ARRIVING["Driver đang đến"]
+    ARRIVING --> ARRIVED["Driver đã đến điểm đón"]
+    ARRIVED --> PICKUP["Đón Customer"]
+    PICKUP --> TRIP["Thực hiện chuyến"]
+    TRIP --> COMPLETED["Trip Completed"]
+
+    COMPLETED --> FARE["Tính Fare"]
+    FARE --> PAYMENT{"Phương thức thanh toán"}
+
+    PAYMENT -- "Cash" --> CASH["Xác nhận thanh toán tiền mặt"]
+    PAYMENT -- "Online" --> ONLINE["Payment Provider"]
+
+    ONLINE --> RESULT{"Payment Result"}
+    RESULT -- "Success" --> PAID["Payment Success"]
+    RESULT -- "Failed" --> FAILED["Thông báo Payment Failed"]
+    FAILED --> RETRY{"Retry?"}
+    RETRY -- "Yes" --> ONLINE
+    RETRY -- "No" --> HANDLE["Xử lý theo chính sách"]
+
+    CASH --> NOTIFY["Gửi Notification"]
+    PAID --> NOTIFY
+    HANDLE --> NOTIFY
+
+    NOTIFY --> RATING["Customer đánh giá Driver"]
+    RATING --> END2([Hoàn tất])
+```
+
+---
+
+# 10. Business Process – Exception Handling
+
+| Process | Exception | Hệ thống xử lý |
+|---|---|---|
+| Booking | Pickup/Destination không hợp lệ | Yêu cầu Customer nhập lại |
+| Booking | Mất kết nối | Cho phép retry theo trạng thái Booking |
+| Driver Matching | Không có Driver | Thông báo Customer |
+| Driver Matching | Driver Reject | Tìm Driver tiếp theo |
+| Driver Matching | Driver Timeout | Tìm Driver tiếp theo |
+| Driver Matching | Driver mất kết nối | Loại khỏi danh sách phù hợp và tìm Driver khác |
+| Trip | Customer hủy | Xử lý theo Cancellation Policy |
+| Trip | Driver hủy | Tìm Driver khác hoặc xử lý theo Policy |
+| Trip | Mất GPS | Thông báo và xử lý theo chính sách |
+| Payment | Payment Failed | Thông báo Customer và cho phép Retry |
+| Payment | Payment Timeout | Kiểm tra lại trạng thái giao dịch |
+| Notification | Gửi thất bại | Retry theo Notification Policy |
+
+---
+
+# 11. Các Business Process chính
+
+| ID | Business Process | Mục tiêu |
+|---|---|---|
+| **BP01** | Create Booking | Tạo yêu cầu đặt xe |
+| **BP02** | Driver Matching | Tìm và phân công Driver |
+| **BP03** | Trip Execution | Thực hiện và cập nhật trạng thái Trip |
+| **BP04** | Fare Calculation | Tính cước chuyến |
+| **BP05** | Payment | Xử lý thanh toán |
+| **BP06** | Notification | Gửi thông báo theo sự kiện |
+| **BP07** | Rating | Customer đánh giá Driver |
+| **BP08** | Operation Management | Giám sát và xử lý Trip |
+| **BP09** | Reporting | Tổng hợp dữ liệu vận hành |
+
+---
+
+# 12. Kết luận
+
+Business Process cốt lõi của CAB System:
+
+> **Create Booking → Driver Matching → Driver Assignment → Trip Execution → Fare Calculation → Payment → Notification → Rating**
+
+Trong đó **Driver Matching** là quy trình trọng tâm cần ưu tiên phân tích chi tiết vì ảnh hưởng trực tiếp đến mục tiêu **BG01 – giảm thời gian tìm tài xế** và **BR01/BR02 – tự động tìm và phân công Driver**.
+
+Các quy trình như **Fare Calculation, Cancellation, Payment Failure và Network Failure** cần tiếp tục xác nhận Business Rules với khách hàng trước khi chuyển sang thiết kế chi tiết.
 
