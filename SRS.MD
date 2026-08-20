@@ -3327,3 +3327,151 @@ Customer Acceptance
 DONE
 
 Mục tiêu cuối cùng: xác định rõ hệ thống phải làm gì, làm như thế nào và điều kiện nào để khách hàng xác nhận là đã đạt yêu cầu.
+bước 14: requirement truy xuất nguồn gốc yêu cầu , ma trận truy xuất yêu cầu ,cột 1 BG, cột thứ 2 BR cột thứ 3 FR,, cột UC, cột tiếp theo AC, Cột tiếp theo TC
+ChatGPT đã nói:
+BƯỚC 14 – REQUIREMENT TRACEABILITY MATRIX (RTM)
+1. Mục tiêu
+Requirement Traceability Matrix (RTM) – Ma trận truy xuất nguồn gốc yêu cầu dùng để theo dõi mối liên hệ từ Business Goal → Business Requirement → Functional Requirement → Use Case → Acceptance Criteria → Test Case.
+
+Mục đích:
+
+Đảm bảo mọi Business Goal (BG) đều được chuyển thành Business Requirement (BR).
+Đảm bảo mỗi BR có Functional Requirement (FR) tương ứng.
+Đảm bảo yêu cầu được thể hiện trong Use Case (UC).
+Mỗi yêu cầu có Acceptance Criteria (AC) để nghiệm thu.
+Mỗi AC có Test Case (TC) để kiểm thử.
+Phát hiện yêu cầu bị thiếu hoặc chưa được kiểm thử.
+2. Chuỗi truy xuất yêu cầu
+Business GoalBG
+Business RequirementBR
+Functional RequirementFR
+Use CaseUC
+Acceptance CriteriaAC
+Test CaseTC
+3. Ma trận truy xuất yêu cầu – RTM
+BG	BR	FR	UC	AC	TC
+BG01 – Giảm thời gian tìm và phân công Driver	BR01 – Giảm thời gian tìm Driver	FR01 – Xác định vị trí Customer	UC02 – Tạo Booking	AC02 – Booking được tạo thành công	TC01 – Kiểm tra tạo Booking
+BG01	BR01	FR02 – Lọc Driver Online/Available	UC12 – Driver Matching	AC03 – Tự động tìm Driver phù hợp	TC02 – Kiểm tra tìm Driver
+BG01	BR01	FR03 – Ưu tiên Driver phù hợp	UC12 – Driver Matching	AC03 – Driver phù hợp được ưu tiên	TC03 – Kiểm tra ưu tiên Driver
+BG02 – Tự động hóa tìm Driver	BR02 – Tự động tìm và phân công Driver	FR04 – Gửi yêu cầu đến Driver	UC12 – Driver Matching	AC04 – Reject/Timeout → tìm Driver tiếp theo	TC04 – Kiểm tra Driver Reject
+BG02	BR02	FR05 – Xử lý Driver Timeout	UC09 – Accept/Reject Booking	AC04 – Timeout → tìm Driver tiếp theo	TC05 – Kiểm tra Driver Timeout
+BG02	BR02	FR06 – Thông báo khi không tìm được Driver	UC12 – Driver Matching	AC05 – Không còn Driver → thông báo Customer	TC06 – Kiểm tra không có Driver
+BG03 – Hỗ trợ thanh toán Cash/Electronic	BR03 – Hỗ trợ nhiều phương thức thanh toán	FR07 – Chọn phương thức thanh toán	UC04 – Payment	AC10 – Customer chọn Cash/Electronic	TC07 – Kiểm tra chọn Payment Method
+BG03	BR03	FR08 – Xử lý Cash Payment	UC04 – Payment	AC10 – Cash Payment được ghi nhận	TC08 – Kiểm tra Cash Payment
+BG03	BR03	FR09 – Xử lý Electronic Payment	UC04 – Payment	AC10 – Electronic Payment được xử lý	TC09 – Kiểm tra Electronic Payment
+BG03	BR03	FR10 – Xử lý Payment Failed	UC04 – Payment	AC11 – Payment Failed → thông báo và Retry	TC10 – Kiểm tra Payment Failed
+BG04 – Nâng cao trải nghiệm Customer	BR04 – Cho phép Customer theo dõi Trip	FR11 – Hiển thị thông tin Driver	UC03 – Tracking Trip	AC08 – Customer theo dõi Driver	TC11 – Kiểm tra Tracking
+BG04	BR04	FR12 – Cập nhật vị trí Driver	UC03 – Tracking Trip	AC08 – Vị trí được cập nhật	TC12 – Kiểm tra cập nhật Location
+BG04	BR04	FR13 – Hiển thị trạng thái Trip	UC03 – Tracking Trip	AC08 – Trip Status được cập nhật	TC13 – Kiểm tra Trip Status
+BG04	BR04	FR14 – Đánh giá Driver	UC06 – Rating	AC13 – Chỉ đánh giá sau khi Trip hoàn thành	TC14 – Kiểm tra Rating
+BG05 – Nâng cao hiệu quả vận hành	BR05 – Quản lý Customer/Driver/Trip	FR15 – Quản lý Customer	UC15 – Quản lý Customer	AC14 – Operations quản lý dữ liệu	TC15 – Kiểm tra quản lý Customer
+BG05	BR05	FR16 – Quản lý Driver	UC16 – Quản lý Driver	AC14 – Operations quản lý Driver	TC16 – Kiểm tra quản lý Driver
+BG05	BR05	FR17 – Quản lý Trip	UC18 – Quản lý Trip	AC14 – Operations theo dõi Trip	TC17 – Kiểm tra quản lý Trip
+BG05	BR05	FR18 – Báo cáo vận hành	UC20 – Reporting	AC15 – Báo cáo được tạo chính xác	TC18 – Kiểm tra Reporting
+BG07 – An toàn và tin cậy	BR07 – Bảo mật và phân quyền	FR19 – Authentication	UC01 – Customer Account	AC-S01 – User chưa đăng nhập bị từ chối	TC19 – Kiểm tra Authentication
+BG07	BR07	FR20 – Authorization/RBAC	UC21 – Authorization	AC16 – User chỉ được truy cập đúng quyền	TC20 – Kiểm tra Authorization
+BG07	BR07	FR21 – Audit Log	UC22 – Audit Log	AC17 – Ghi nhận thao tác quản trị	TC21 – Kiểm tra Audit Log
+BG07	BR07	FR22 – Fault Tolerance	UC04 – Payment	AC11 – Payment lỗi không làm dừng hệ thống	TC22 – Kiểm tra Payment Failure
+
+4. Sơ đồ truy xuất cho quy trình chính
+Đối với quy trình đặt xe và tìm Driver, có thể truy xuất như sau:
+
+BG01Giảm thời gian tìm Driver
+BR01Giảm thời gian tìm & phân công Driver
+FR01Xác định vị trí Customer
+FR02Lọc Driver Available
+FR03Ưu tiên Driver phù hợp
+FR04Gửi yêu cầu Driver
+FR05Xử lý Reject / Timeout
+FR06Thông báo không tìm được Driver
+UC02Tạo Booking
+UC12Driver Matching
+UC09Driver Accept / Reject
+AC02Booking được tạo
+AC03Tìm Driver phù hợp
+AC04Reject / Timeout → Driver tiếp theo
+AC05Không còn Driver → thông báo
+TC01Test Create Booking
+TC02Test Driver Matching
+TC03Test Driver Reject
+TC04Test Driver Timeout
+TC05Test No Driver
+5. Quy tắc truy xuất
+Mỗi yêu cầu nên có thể truy xuất hai chiều:
+
+Forward Traceability
+Từ mục tiêu nghiệp vụ xuống kiểm thử:
+
+BG
+↓
+BR
+↓
+FR
+↓
+UC
+↓
+AC
+↓
+TC
+
+Ví dụ:
+
+BG03
+↓
+BR03
+↓
+FR07, FR08, FR09, FR10
+↓
+UC04
+↓
+AC10, AC11
+↓
+TC07, TC08, TC09, TC10
+
+Backward Traceability
+Từ Test Case quay ngược về Business Goal:
+
+TC
+↓
+AC
+↓
+UC
+↓
+FR
+↓
+BR
+↓
+BG
+
+Mục đích là đảm bảo không có Test Case nào kiểm thử một chức năng không có yêu cầu, đồng thời không có yêu cầu nào bị bỏ sót không được kiểm thử.
+
+6. Kiểm tra độ bao phủ yêu cầu
+Kiểm tra	Kết quả mong muốn
+BG có BR tương ứng?	Có
+BR có FR tương ứng?	Có
+FR có UC tương ứng?	Có
+UC có AC tương ứng?	Có
+AC có TC tương ứng?	Có
+Có BR nào không có FR?	Không
+Có FR nào không có UC?	Không
+Có AC nào không có TC?	Không
+Có TC nào không truy xuất được về BG?	Không
+
+7. Kết luận Bước 14
+Requirement Traceability Matrix của CAB System được xây dựng theo chuỗi:
+
+BGBusiness Goal
+BRBusiness Requirement
+FRFunctional Requirement
+UCUse Case
+ACAcceptance Criteria
+TCTest Case
+Trong đó:
+
+BG: Tại sao doanh nghiệp cần hệ thống?
+BR: Doanh nghiệp cần hệ thống đáp ứng điều gì?
+FR: Hệ thống phải thực hiện chức năng gì?
+UC: Actor tương tác với hệ thống như thế nào?
+AC: Khi nào chức năng được xem là đạt?
+TC: Làm thế nào để kiểm thử chức năng đó?
+Bước 14 hoàn thành khi mọi BG → BR → FR → UC → AC → TC đều truy xuất được với nhau, không có yêu cầu bị bỏ sót và không có Test Case nằm ngoài phạm vi yêu cầu.
