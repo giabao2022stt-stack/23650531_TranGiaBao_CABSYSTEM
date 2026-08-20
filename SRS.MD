@@ -134,6 +134,86 @@ Requirement Clarification Workshop
 → Xây dựng Acceptance Criteria
 → Baseline Requirement
 → Chuyển sang Solution Design & Development.
+Bước 2 : Tìm ra và xác nhận các stalkholder trong đây, chia làm 2 cột, cột thứ 1: tên của stakeholder, cột thứ 2: vai trò của nó, Sau đó vẽ 1 ma trận tên stakeholder matrix cho biết sự ảnh hưởng tầm quan trọng vai trò của stakeholder trong hệ thống
+# BƯỚC 2 – XÁC ĐỊNH STAKEHOLDER
+
+## 1. Stakeholder List
+
+| Stakeholder | Vai trò |
+|---|---|
+| **Ban Giám đốc (Management)** | Định hướng chiến lược, phê duyệt phạm vi, ngân sách và các quyết định quan trọng của dự án. |
+| **Business Owner / CAB Business Team** | Đại diện nghiệp vụ, xác định mục tiêu kinh doanh và chịu trách nhiệm về sản phẩm. |
+| **Business Analyst (BA)** | Thu thập, phân tích, làm rõ và quản lý yêu cầu; kết nối Business với đội phát triển. |
+| **Customer** | Đăng ký, đặt xe, theo dõi chuyến, thanh toán, xem lịch sử và đánh giá tài xế. |
+| **Driver** | Quản lý hồ sơ/phương tiện, nhận chuyến, cập nhật trạng thái và vị trí. |
+| **Operations Staff** | Quản lý khách hàng, tài xế, phương tiện, chuyến đi và xử lý các trường hợp phát sinh. |
+| **Administrator** | Quản lý tài khoản, phân quyền và thực hiện các thao tác quản trị nhạy cảm. |
+| **Finance / Accounting** | Quản lý doanh thu, giao dịch, đối soát và nghiệp vụ thanh toán. |
+| **IT / System Administrator** | Quản lý hạ tầng, môi trường triển khai và vận hành hệ thống. |
+| **Development Team** | Thiết kế, phát triển, tích hợp và bảo trì hệ thống. |
+| **QA / Tester** | Kiểm thử chức năng, tích hợp, hiệu năng và đảm bảo chất lượng. |
+| **Payment Provider** | Cung cấp dịch vụ thanh toán điện tử và xử lý kết quả giao dịch. |
+| **Notification Provider** | Cung cấp các kênh gửi thông báo như Push, SMS, Email. |
+| **Location / Map Provider** | Cung cấp dữ liệu bản đồ, định vị, khoảng cách và hỗ trợ tính ETA. |
+| **Security / Compliance** | Đảm bảo các yêu cầu về bảo mật, quyền riêng tư và tuân thủ. |
+| **Customer Support / Call Center** | Tiếp nhận và hỗ trợ các vấn đề phát sinh từ khách hàng và tài xế. |
+
+---
+
+## 2. Stakeholder Matrix
+
+**Mục đích:** Đánh giá stakeholder dựa trên hai tiêu chí:
+
+- **Power / Influence:** Mức độ ảnh hưởng và khả năng ra quyết định.
+- **Interest:** Mức độ quan tâm và tham gia vào dự án.
+
+```mermaid
+quadrantChart
+    title Stakeholder Matrix - CAB System
+    x-axis Low Interest --> High Interest
+    y-axis Low Power --> High Power
+
+    quadrant-1 Manage Closely
+    quadrant-2 Keep Satisfied
+    quadrant-3 Monitor
+    quadrant-4 Keep Informed
+
+    "Ban Giám đốc": [0.85, 0.95]
+    "Business Owner": [0.90, 0.90]
+    "Operations Staff": [0.90, 0.80]
+    "Business Analyst": [0.95, 0.85]
+    "Administrator": [0.75, 0.75]
+
+    "Finance / Accounting": [0.45, 0.70]
+    "IT / System Admin": [0.50, 0.75]
+    "Security / Compliance": [0.40, 0.80]
+
+    "Customer": [0.85, 0.35]
+    "Driver": [0.80, 0.30]
+    "Development Team": [0.90, 0.40]
+    "QA / Tester": [0.80, 0.30]
+    "Customer Support": [0.70, 0.25]
+
+    "Payment Provider": [0.30, 0.35]
+    "Notification Provider": [0.25, 0.25]
+    "Location / Map Provider": [0.25, 0.30]
+```
+
+### 3. Phân nhóm Stakeholder
+
+| Nhóm | Cách quản lý | Stakeholder chính |
+|---|---|---|
+| **Manage Closely** | Tham gia thường xuyên, trao đổi và xác nhận các quyết định quan trọng | Management, Business Owner, Operations, BA, Administrator |
+| **Keep Satisfied** | Duy trì sự hài lòng, cập nhật các vấn đề có ảnh hưởng | Finance, IT, Security/Compliance |
+| **Keep Informed** | Cập nhật thường xuyên, thu thập phản hồi | Customer, Driver, Development, QA, Customer Support |
+| **Monitor** | Theo dõi khi phát sinh vấn đề hoặc yêu cầu tích hợp | Payment, Notification, Location/Map Provider |
+
+### 4. Kết luận
+
+> **Nhóm cần ưu tiên cao nhất là Management, Business Owner, Operations, BA và Administrator**, vì có mức độ ảnh hưởng và mức độ tham gia cao đối với phạm vi, quy trình và quyết định của CAB System.
+>
+> Trong giai đoạn phân tích, BA cần đặc biệt phối hợp với **Business Owner, Operations, Customer, Driver, Finance và IT/Security** để xác nhận Business Rules, quy trình nghiệp vụ và các yêu cầu còn chưa rõ.
+
 
 
 
