@@ -1,139 +1,230 @@
 
 Bước 1 : đọc và phân tích yêu cầu sơ khởi của khách hàng ở giai đoạn 1 
-ChatGPT đã nói:
-Được. Nếu đưa lên GitHub Markdown, tôi khuyến nghị trình bày theo format tài liệu BA chuyên nghiệp, ngắn gọn và dễ review như sau:
+# BƯỚC 1 – PHÂN TÍCH YÊU CẦU SƠ KHỞI
 
-CAB System – Phân tích yêu cầu sơ khởi
-1. Mục tiêu dự án
-Xây dựng nền tảng CAB System phục vụ toàn bộ vòng đời đặt xe:
+## 1. Mục tiêu dự án
 
-Tạo yêu cầu → Tìm tài xế → Thực hiện chuyến → Tính cước → Thanh toán → Đánh giá → Quản trị & Báo cáo
+Xây dựng **CAB System** – nền tảng đặt xe trực tuyến, quản lý toàn bộ vòng đời chuyến xe:
 
-Hệ thống cần có khả năng mở rộng, tích hợp với hệ thống bên ngoài và triển khai từng phần, đáp ứng định hướng phát triển lâu dài của doanh nghiệp.
+> **Tạo yêu cầu → Tìm tài xế → Phân công → Thực hiện chuyến → Tính cước → Thanh toán → Đánh giá → Báo cáo**
 
-2. Phạm vi nghiệp vụ
-Nhóm người dùng / hệ thống	Chức năng chính
-Customer	Đăng ký, đăng nhập, đặt xe, theo dõi chuyến, thanh toán, lịch sử, đánh giá
-Driver	Quản lý hồ sơ/phương tiện, trạng thái hoạt động, nhận/từ chối chuyến, cập nhật trạng thái, chia sẻ vị trí
-Operations	Quản lý khách hàng, tài xế, phương tiện, chuyến đi, giao dịch và xử lý sự cố
-Administrator	Phân quyền và thực hiện các thao tác quản trị nhạy cảm
-Payment Provider	Xử lý thanh toán điện tử
-Notification Provider	Gửi thông báo qua các kênh được hỗ trợ
-Location/GPS Service	Hỗ trợ định vị, tìm tài xế và tính ETA
+Hệ thống cần đáp ứng khả năng **mở rộng, tích hợp với hệ thống bên ngoài, bảo mật và triển khai từng phần**.
 
-3. Quy trình nghiệp vụ cốt lõi
-Customer tạo Booking
-        ↓
-Hệ thống tìm Driver phù hợp
-        ↓
-Driver nhận chuyến
-        ↓
-Thực hiện chuyến
-        ↓
-Hoàn thành chuyến
-        ↓
-Tính cước
-        ↓
-Thanh toán
-        ↓
-Đánh giá
-        ↓
-Lưu lịch sử & báo cáo
+---
 
-Driver Matching
-Đây là nghiệp vụ trọng tâm của hệ thống:
+## 2. Phạm vi nghiệp vụ sơ bộ
 
-Xác định tài xế phù hợp dựa trên vị trí, trạng thái và tiêu chí vận hành.
-Ưu tiên tài xế phù hợp và gần khách hàng.
-Nếu tài xế từ chối hoặc không phản hồi, hệ thống tự động tìm tài xế tiếp theo.
-Không yêu cầu khách hàng tạo lại booking.
-Nếu không tìm được tài xế, hệ thống phải thông báo rõ ràng cho khách hàng.
-4. Yêu cầu chức năng chính
+| Nhóm | Phạm vi chính |
+|---|---|
+| **Customer** | Đăng ký, đăng nhập, cập nhật thông tin, đặt xe, theo dõi chuyến, thanh toán, xem lịch sử, đánh giá |
+| **Driver** | Quản lý hồ sơ/phương tiện, trạng thái hoạt động, nhận/từ chối chuyến, cập nhật trạng thái và vị trí |
+| **Operations** | Quản lý Customer, Driver, Vehicle, Trip; giám sát chuyến và xử lý sự cố |
+| **Administration** | Phân quyền, quản lý chức năng nhạy cảm và audit |
+| **Payment** | Tính cước, thanh toán tiền mặt và thanh toán điện tử |
+| **Notification** | Gửi thông báo cho Customer và Driver |
+| **Reporting** | Báo cáo chuyến, doanh thu, tỷ lệ hoàn thành, hủy và hiệu quả Driver |
+| **Integration** | Payment Provider, Notification Provider, Location/Map Service |
+
+---
+
+## 3. Quy trình nghiệp vụ cốt lõi
+
+```text
 Customer
-Quản lý tài khoản.
-Tạo và theo dõi booking.
-Theo dõi tài xế và trạng thái chuyến.
-Xem lịch sử và cước chuyến.
-Thanh toán.
-Đánh giá tài xế.
-Driver
-Quản lý hồ sơ và phương tiện.
-Cập nhật trạng thái sẵn sàng.
-Nhận/từ chối chuyến.
-Cập nhật trạng thái chuyến.
-Cập nhật vị trí.
-Operations
-Quản lý Customer, Driver, Vehicle.
-Theo dõi chuyến đang diễn ra.
-Hỗ trợ xử lý chuyến lỗi.
-Tra cứu giao dịch.
-Theo dõi hiệu quả vận hành.
-Reporting & Audit
-Số lượng chuyến.
-Doanh thu.
-Tỷ lệ hoàn thành.
-Tỷ lệ hủy.
-Hiệu quả tài xế.
-Audit log cho các thao tác quan trọng.
-5. Yêu cầu phi chức năng
-Nhóm	Yêu cầu
-Scalability	Có khả năng mở rộng độc lập khi tải tăng
-Availability	Lỗi Payment/Notification không làm dừng toàn bộ hệ thống
-Security	Bảo vệ dữ liệu cá nhân, vị trí, phương tiện và giao dịch
-Authorization	Phân quyền chức năng quản trị
-Auditability	Lưu vết các thao tác quan trọng
-Extensibility	Dễ bổ sung dịch vụ, payment provider, notification provider
-Deployability	Có thể triển khai chức năng mới từng phần
-Maintainability	Hạn chế phụ thuộc giữa các thành phần
+   │
+   ▼
+Tạo Booking
+   │
+   ▼
+Tìm Driver phù hợp
+   │
+   ├── Driver từ chối/Timeout
+   │          │
+   │          └──────► Tìm Driver tiếp theo
+   │
+   ▼
+Driver nhận chuyến
+   │
+   ▼
+Thực hiện chuyến
+   │
+   ▼
+Hoàn thành chuyến
+   │
+   ▼
+Tính cước
+   │
+   ▼
+Thanh toán
+   │
+   ▼
+Đánh giá
+   │
+   ▼
+Lưu lịch sử & Báo cáo
+```
 
-6. Business Rules sơ bộ
-Chỉ Driver đủ điều kiện và đang sẵn sàng mới được nhận chuyến.
-Driver được ưu tiên dựa trên vị trí và các tiêu chí vận hành.
-Driver từ chối/timeout → tiếp tục tìm Driver khác.
-Không có Driver phù hợp → thông báo Customer.
-Fare được tính dựa trên loại dịch vụ và thông tin chuyến.
-Thanh toán điện tử được xử lý thông qua External Payment Provider.
-CAB không lưu trực tiếp thông tin thẻ/tài khoản nhạy cảm.
-Chỉ chuyến hoàn thành mới đủ điều kiện để Customer đánh giá Driver.
-Chức năng quản trị phải được kiểm soát bằng quyền.
-Các thao tác quan trọng phải được ghi nhận vào Audit Log.
-7. Các vấn đề cần làm rõ
-Hiện tại một số Business Rules quan trọng chưa được khách hàng chốt:
+### Driver Matching
 
-#	Vấn đề cần xác nhận
-1	Công thức tính cước, phụ phí và giá tối thiểu
-2	Tiêu chí và cách thức ưu tiên Driver
-3	Thời gian Driver phải phản hồi và cơ chế timeout
-4	Chính sách hủy chuyến và phí hủy
-5	Xử lý mất kết nối/GPS trong quá trình chuyến
-6	Xử lý Payment thất bại, timeout và retry
-7	Payment Provider và các phương thức thanh toán
-8	Notification channels và cơ chế retry
-9	Thời gian lưu trữ dữ liệu và lịch sử vị trí
-10	SLA, performance target và quy mô tải dự kiến
-11	Mô hình Role/Permission của nhân viên vận hành
+Đây là nghiệp vụ trọng tâm:
 
-8. Rủi ro chính
-Driver Matching chưa có business rule cụ thể.
-Fare Calculation chưa được xác định.
-Chính sách Cancellation chưa rõ.
-Phụ thuộc vào Payment/Notification Provider.
-Realtime Location có thể tạo tải lớn.
-Chưa xác định rõ SLA và quy mô người dùng.
-Xử lý offline/network failure chưa được thống nhất.
-9. Kết luận của BA
-CAB System là nền tảng quản lý toàn bộ vòng đời chuyến xe, không chỉ đơn thuần là ứng dụng đặt xe.
+- Xác định Driver dựa trên **vị trí, trạng thái sẵn sàng và tiêu chí vận hành**.
+- Ưu tiên Driver phù hợp và gần Customer.
+- Nếu Driver **từ chối hoặc không phản hồi**, hệ thống tự động tìm Driver tiếp theo.
+- Customer không cần tạo lại Booking.
+- Nếu không tìm được Driver, hệ thống phải thông báo rõ ràng.
 
-Phạm vi nghiệp vụ chính đã được xác định tương đối rõ, tuy nhiên các Business Rules liên quan đến Fare, Driver Matching, Cancellation, Payment và Exception Handling vẫn cần được làm rõ trước khi khóa requirement.
+---
 
-Đề xuất bước tiếp theo
+## 4. Yêu cầu chức năng chính
+
+### Customer
+
+- Đăng ký / đăng nhập.
+- Quản lý thông tin cá nhân.
+- Tạo Booking.
+- Theo dõi Driver và trạng thái Trip.
+- Xem lịch sử và cước.
+- Thanh toán.
+- Đánh giá Driver.
+
+### Driver
+
+- Quản lý hồ sơ và phương tiện.
+- Cập nhật trạng thái sẵn sàng.
+- Nhận / từ chối chuyến.
+- Cập nhật trạng thái Trip.
+- Cập nhật vị trí.
+
+### Operations
+
+- Quản lý Customer, Driver, Vehicle.
+- Theo dõi Trip đang diễn ra.
+- Xử lý Trip lỗi.
+- Tra cứu giao dịch.
+- Theo dõi hiệu quả hoạt động.
+
+### Reporting & Audit
+
+- Số lượng Trip.
+- Doanh thu.
+- Tỷ lệ hoàn thành.
+- Tỷ lệ hủy.
+- Hiệu quả Driver.
+- Audit Log.
+
+---
+
+## 5. Yêu cầu phi chức năng
+
+| Nhóm | Yêu cầu |
+|---|---|
+| **Scalability** | Có khả năng mở rộng độc lập khi tải tăng |
+| **Availability** | Lỗi Payment/Notification không làm dừng toàn bộ hệ thống |
+| **Security** | Bảo vệ dữ liệu cá nhân, phương tiện, vị trí và giao dịch |
+| **Authorization** | Kiểm soát quyền truy cập chức năng quản trị |
+| **Auditability** | Lưu vết các thao tác quan trọng |
+| **Extensibility** | Có thể bổ sung dịch vụ, Payment Provider, Notification Provider |
+| **Maintainability** | Hạn chế phụ thuộc giữa các thành phần |
+| **Deployability** | Cho phép triển khai chức năng mới từng phần |
+
+---
+
+## 6. Business Rules sơ bộ
+
+| ID | Business Rule |
+|---|---|
+| **BR-01** | Chỉ Driver đủ điều kiện và đang sẵn sàng mới được nhận chuyến. |
+| **BR-02** | Driver phải phù hợp với loại xe/dịch vụ Customer yêu cầu. |
+| **BR-03** | Hệ thống ưu tiên Driver phù hợp và gần Customer. |
+| **BR-04** | Driver từ chối hoặc Timeout → hệ thống tìm Driver tiếp theo. |
+| **BR-05** | Không tìm được Driver → thông báo Customer. |
+| **BR-06** | Fare được xác định dựa trên loại dịch vụ và thông tin chuyến. |
+| **BR-07** | Payment điện tử được xử lý thông qua External Payment Provider. |
+| **BR-08** | CAB không lưu trực tiếp thông tin thẻ/tài khoản nhạy cảm. |
+| **BR-09** | Customer chỉ được đánh giá sau khi Trip hoàn thành. |
+| **BR-10** | Chức năng quản trị phải được kiểm soát bằng quyền. |
+| **BR-11** | Các thao tác quan trọng phải được ghi nhận Audit Log. |
+
+> **Lưu ý:** Các Business Rules trên mới là **sơ bộ**, cần được xác nhận với Stakeholder trước khi trở thành Baseline Requirement.
+
+---
+
+## 7. Các vấn đề cần làm rõ
+
+| # | Open Issue / Question |
+|---:|---|
+| 1 | Công thức tính cước, phụ phí và giá tối thiểu là gì? |
+| 2 | Tiêu chí và thuật toán ưu tiên Driver như thế nào? |
+| 3 | Driver có bao nhiêu thời gian để phản hồi? |
+| 4 | Chính sách hủy chuyến và phí hủy như thế nào? |
+| 5 | Xử lý mất kết nối/GPS trong quá trình chuyến ra sao? |
+| 6 | Payment thất bại, Timeout và Retry được xử lý thế nào? |
+| 7 | Payment Provider và phương thức thanh toán nào được sử dụng? |
+| 8 | Notification Channel nào được hỗ trợ trong MVP? |
+| 9 | Thời gian lưu trữ Trip, Location, Payment và Audit Log? |
+| 10 | SLA, Performance Target và quy mô tải dự kiến? |
+| 11 | Mô hình Role/Permission của Operations và Administrator? |
+
+---
+
+## 8. Rủi ro chính
+
+| Rủi ro | Mức độ |
+|---|---|
+| Fare Calculation chưa được xác định | 🔴 Cao |
+| Driver Matching chưa có tiêu chí cụ thể | 🔴 Cao |
+| Cancellation Policy chưa rõ | 🔴 Cao |
+| Payment Provider chưa xác định | 🔴 Cao |
+| Performance/SLA chưa xác định | 🔴 Cao |
+| Realtime Location có thể tạo tải lớn | 🔴 Cao |
+| Xử lý Network Failure chưa thống nhất | 🔴 Cao |
+| Notification/Payment phụ thuộc hệ thống bên ngoài | 🟠 Trung bình - Cao |
+| Data Retention chưa xác định | 🟠 Trung bình |
+
+---
+
+## 9. Kết luận của BA
+
+**CAB System không chỉ là ứng dụng đặt xe mà là nền tảng quản lý toàn bộ vòng đời chuyến xe.**
+
+Phạm vi nghiệp vụ chính đã tương đối rõ, tuy nhiên cần xác nhận các Business Rules quan trọng trước khi khóa Requirement, đặc biệt:
+
+> **Fare → Driver Matching → Timeout → Cancellation → Payment Failure → Network Failure → Data Retention**
+
+### Đề xuất bước tiếp theo
+
+```text
 Requirement Clarification Workshop
-→ Chốt Business Rules & Open Issues
-→ Xây dựng Use Case / Business Process
-→ Đặc tả Functional & Non-functional Requirements
-→ Xây dựng Acceptance Criteria
-→ Baseline Requirement
-→ Chuyển sang Solution Design & Development.
+              ↓
+Xác nhận Business Rules & Open Issues
+              ↓
+Use Case & Business Process
+              ↓
+Functional / Non-functional Requirements
+              ↓
+Acceptance Criteria
+              ↓
+Requirement Baseline
+              ↓
+Solution Design & Development
+```
+
+### Deliverables của giai đoạn phân tích
+
+- [x] Scope & Business Context
+- [x] Preliminary Functional Requirements
+- [x] Preliminary Non-functional Requirements
+- [x] Business Rules
+- [x] Exception / Edge Cases
+- [x] Open Questions
+- [x] Risks & Dependencies
+- [ ] Stakeholder Analysis
+- [ ] Use Case Diagram
+- [ ] Detailed Use Case Specification
+- [ ] Acceptance Criteria
+- [ ] Requirement Baseline
+
 Bước 2 : Tìm ra và xác nhận các stalkholder trong đây, chia làm 2 cột, cột thứ 1: tên của stakeholder, cột thứ 2: vai trò của nó, Sau đó vẽ 1 ma trận tên stakeholder matrix cho biết sự ảnh hưởng tầm quan trọng vai trò của stakeholder trong hệ thống
 # BƯỚC 2 – XÁC ĐỊNH STAKEHOLDER
 
