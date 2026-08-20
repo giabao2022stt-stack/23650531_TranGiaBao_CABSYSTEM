@@ -1881,34 +1881,42 @@ Thông báo Customer
 
 > **Kết quả đầu ra của Bước 8:** Business Rules + Acceptance Criteria là cơ sở để BA viết **Use Case Specification**, còn QA có thể sử dụng Acceptance Criteria để xây dựng **Test Case**.
 bước 9: xây dựng Data modeling dựa vào đó xây dựng các cái thực thể và mô hình erd, dùng code mermaid
-BƯỚC 9 – DATA MODELING & ERD
-1. Mục tiêu
-Xây dựng mô hình dữ liệu dựa trên các Business Requirement, Functional Requirement và Business Rule đã xác định ở các bước trước.
+# BƯỚC 9 – DATA MODELING & ERD
 
-Mô hình dữ liệu tập trung vào các nghiệp vụ chính:
+## 1. Mục tiêu
 
-Customer → Booking → Driver Matching → Trip → Fare → Payment → Rating
+Xây dựng mô hình dữ liệu dựa trên các Business Requirement, Functional Requirement và Business Rule đã xác định.
 
-Đồng thời quản lý Driver, Vehicle, Location, Notification, User & Audit Log.
+Mô hình dữ liệu tập trung vào quy trình chính:
 
-2. Xác định các thực thể chính
-STT	Entity	Vai trò
-1	User	Quản lý thông tin tài khoản và xác thực người dùng
-2	Customer	Thông tin khách hàng
-3	Driver	Thông tin tài xế và trạng thái hoạt động
-4	Vehicle	Thông tin phương tiện của tài xế
-5	VehicleType	Phân loại loại xe/dịch vụ
-6	Booking	Yêu cầu đặt xe của khách hàng
-7	DriverAssignment	Lưu quá trình hệ thống đề xuất Booking cho Driver
-8	Trip	Thông tin chuyến đi thực tế
-9	Location	Thông tin vị trí tài xế
-10	Fare	Thông tin tính cước
-11	Payment	Thông tin giao dịch thanh toán
-12	Rating	Đánh giá của khách hàng đối với tài xế
-13	Notification	Lịch sử thông báo
-14	AuditLog	Lưu vết các thao tác quan trọng
+**Customer → Booking → Driver Matching → Trip → Fare → Payment → Rating**
 
-3. Mô hình ERD
+---
+
+## 2. Xác định các Entity
+
+| STT | Entity | Vai trò |
+|---:|---|---|
+| 1 | **User** | Quản lý tài khoản và thông tin xác thực |
+| 2 | **Customer** | Quản lý thông tin khách hàng |
+| 3 | **Driver** | Quản lý thông tin và trạng thái tài xế |
+| 4 | **Vehicle** | Quản lý phương tiện của tài xế |
+| 5 | **VehicleType** | Quản lý loại xe/dịch vụ |
+| 6 | **Booking** | Lưu yêu cầu đặt xe của khách hàng |
+| 7 | **DriverAssignment** | Lưu quá trình tìm và phân công tài xế |
+| 8 | **Trip** | Quản lý chuyến đi thực tế |
+| 9 | **Location** | Lưu vị trí của tài xế |
+| 10 | **Fare** | Quản lý thông tin tính cước |
+| 11 | **Payment** | Quản lý giao dịch thanh toán |
+| 12 | **Rating** | Quản lý đánh giá tài xế |
+| 13 | **Notification** | Quản lý thông báo |
+| 14 | **AuditLog** | Lưu vết các thao tác quan trọng |
+
+---
+
+# 3. Entity Relationship Diagram – ERD
+
+```mermaid
 erDiagram
 
     USER {
@@ -1927,7 +1935,6 @@ erDiagram
         bigint user_id FK
         string full_name
         string gender
-        date date_of_birth
         string address
         datetime created_at
     }
@@ -1943,6 +1950,14 @@ erDiagram
         datetime updated_at
     }
 
+    VEHICLE_TYPE {
+        bigint vehicle_type_id PK
+        string name
+        string description
+        decimal base_fare
+        string status
+    }
+
     VEHICLE {
         bigint vehicle_id PK
         bigint driver_id FK
@@ -1951,14 +1966,6 @@ erDiagram
         string brand
         string model
         string color
-        string status
-    }
-
-    VEHICLE_TYPE {
-        bigint vehicle_type_id PK
-        string name
-        string description
-        decimal base_fare
         string status
     }
 
@@ -1992,11 +1999,11 @@ erDiagram
         bigint trip_id PK
         bigint booking_id FK
         bigint driver_id FK
-        datetime started_at
-        datetime completed_at
         string status
         decimal distance
         int duration
+        datetime started_at
+        datetime completed_at
     }
 
     LOCATION {
@@ -2070,10 +2077,10 @@ erDiagram
     USER ||--o| DRIVER : "has"
 
     DRIVER ||--o{ VEHICLE : "owns"
-    VEHICLE_TYPE ||--o{ VEHICLE : "categorizes"
+    VEHICLE_TYPE ||--o{ VEHICLE : "defines"
 
     CUSTOMER ||--o{ BOOKING : "creates"
-    VEHICLE_TYPE ||--o{ BOOKING : "requested"
+    VEHICLE_TYPE ||--o{ BOOKING : "requests"
 
     BOOKING ||--o{ DRIVER_ASSIGNMENT : "has"
     DRIVER ||--o{ DRIVER_ASSIGNMENT : "receives"
@@ -2092,80 +2099,146 @@ erDiagram
 
     USER ||--o{ NOTIFICATION : "receives"
     USER ||--o{ AUDIT_LOG : "creates"
+```
 
-4. Giải thích các quan hệ quan trọng
-Customer → Booking
-Một Customer có thể tạo nhiều Booking.
+---
 
+# 4. Giải thích các quan hệ chính
+
+## 4.1. Customer – Booking
+
+Một khách hàng có thể tạo nhiều yêu cầu đặt xe.
+
+```text
 Customer 1 ──────── N Booking
+```
 
-Booking → Driver Assignment
+---
+
+## 4.2. Booking – DriverAssignment
+
 Một Booking có thể được gửi lần lượt cho nhiều Driver.
 
+```text
 Booking 1 ──────── N DriverAssignment
+```
 
 Ví dụ:
 
+```text
 Booking #1001
-     ↓
-Driver A → Reject
-     ↓
-Driver B → Timeout
-     ↓
-Driver C → Accept
+     │
+     ├── Driver A → REJECT
+     │
+     ├── Driver B → TIMEOUT
+     │
+     └── Driver C → ACCEPT
+```
 
-Do đó không nên lưu trực tiếp Driver ID duy nhất trong Booking để quản lý toàn bộ lịch sử matching.
+`DriverAssignment` giúp lưu lại lịch sử quá trình tìm tài xế.
 
-Booking → Trip
-Một Booking thành công sẽ tạo một Trip.
+---
 
+## 4.3. Booking – Trip
+
+Một Booking thành công sẽ tạo ra một Trip.
+
+```text
 Booking 1 ──────── 0..1 Trip
+```
 
 Nếu không tìm được Driver thì Booking có thể không phát sinh Trip.
 
-Driver → Vehicle
-Một Driver có thể quản lý một hoặc nhiều Vehicle tùy chính sách doanh nghiệp.
+---
 
+## 4.4. Driver – Vehicle
+
+Driver quản lý phương tiện được sử dụng để thực hiện chuyến.
+
+```text
 Driver 1 ──────── N Vehicle
+```
 
-Trip → Fare
-Mỗi Trip có thông tin tính cước.
+---
 
-Trip 1 ──────── 1 Fare
+## 4.5. VehicleType – Vehicle
 
-Fare có thể bao gồm:
+Một loại xe có thể được sử dụng bởi nhiều Vehicle.
 
-Giá cơ bản
-Phí theo khoảng cách
-Phí theo thời gian
-Phụ phí
-Giảm giá
-Tổng tiền
-Trip → Payment
-Một Trip có thể có một hoặc nhiều Payment Record để hỗ trợ trường hợp Retry Payment.
-
-Trip 1 ──────── N Payment
+```text
+VehicleType 1 ──────── N Vehicle
+```
 
 Ví dụ:
 
+```text
+Car
+ ├── Vehicle 01
+ ├── Vehicle 02
+ └── Vehicle 03
+```
+
+---
+
+## 4.6. Trip – Fare
+
+Mỗi Trip có thông tin tính cước.
+
+```text
+Trip 1 ──────── 1 Fare
+```
+
+Fare có thể bao gồm:
+
+- Giá cơ bản
+- Phí theo khoảng cách
+- Phí theo thời gian
+- Phụ phí
+- Giảm giá
+- Tổng tiền
+
+---
+
+## 4.7. Trip – Payment
+
+Một Trip có thể phát sinh nhiều Payment Record để hỗ trợ Retry Payment.
+
+```text
+Trip 1 ──────── N Payment
+```
+
+Ví dụ:
+
+```text
 Trip
- ↓
-Payment #01 → FAILED
- ↓
-Payment #02 → SUCCESS
+ │
+ ├── Payment #01 → FAILED
+ │
+ └── Payment #02 → SUCCESS
+```
 
-Driver → Location
-Driver liên tục cập nhật vị trí trong quá trình hoạt động.
+---
 
+## 4.8. Driver – Location
+
+Một Driver có thể gửi nhiều dữ liệu vị trí trong quá trình hoạt động.
+
+```text
 Driver 1 ──────── N Location
+```
 
-Dữ liệu này hỗ trợ:
+Dữ liệu Location hỗ trợ:
 
-Tìm Driver gần Customer
-Tính khoảng cách
-Ước tính ETA
-Theo dõi vị trí
-5. Booking Status sơ bộ
+- Tìm Driver gần Customer
+- Tính khoảng cách
+- Tính ETA
+- Theo dõi vị trí Driver
+
+---
+
+# 5. Booking & Trip State
+
+```mermaid
 stateDiagram-v2
 
     [*] --> REQUESTED
@@ -2191,42 +2264,125 @@ stateDiagram-v2
     NO_DRIVER_AVAILABLE --> [*]
     CANCELLED --> [*]
     COMPLETED --> [*]
+```
 
-Các trạng thái cuối cùng cần được xác nhận với khách hàng, đặc biệt đối với Cancellation, Timeout và Network Failure.
+> **Lưu ý:** Các trạng thái `CANCELLED`, `TIMEOUT`, `NO_DRIVER_AVAILABLE` và cách chuyển trạng thái cần được xác nhận chính thức với khách hàng.
 
-6. Nguyên tắc thiết kế Data Model
-Nguyên tắc	Áp dụng
-Separation of concerns	Tách Customer, Driver, Booking, Trip, Payment thành các Entity riêng
-Traceability	Có thể truy vết từ Booking → Assignment → Trip → Payment
-Auditability	Lưu AuditLog cho các thao tác quan trọng
-Security	Không lưu trực tiếp thông tin thẻ/tài khoản nhạy cảm
-Scalability	Location và Notification được tách riêng để có thể mở rộng
-Extensibility	VehicleType hỗ trợ thêm loại dịch vụ trong tương lai
-Payment Retry	Payment tách khỏi Trip để hỗ trợ nhiều lần giao dịch
-Driver Matching	DriverAssignment lưu lịch sử Accept/Reject/Timeout
+---
 
-7. Kết quả đầu ra Bước 9
-Sau Bước 9, BA có được:
+# 6. Driver Matching Flow
 
-Business Requirements
-        ↓
-Functional Requirements
-        ↓
-Business Rules
-        ↓
-Business Process
-        ↓
+```mermaid
+flowchart TD
+
+    A["Customer tạo Booking"]
+    B["Xác định Driver phù hợp"]
+    C["Lọc Driver Available"]
+    D["Kiểm tra loại xe"]
+    E["Xếp hạng Driver"]
+    F["Gửi Booking cho Driver"]
+    G{"Driver phản hồi?"}
+    H["Accept"]
+    I["Reject"]
+    J["Timeout"]
+    K["Gán Driver"]
+    L["Tìm Driver tiếp theo"]
+    M{"Còn Driver?"}
+    N["Thông báo Customer"]
+    
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+
+    G --> H
+    G --> I
+    G --> J
+
+    H --> K
+
+    I --> L
+    J --> L
+
+    L --> M
+    M -->|Có| F
+    M -->|Không| N
+```
+
+---
+
+# 7. Nguyên tắc thiết kế Data Model
+
+| Nguyên tắc | Áp dụng |
+|---|---|
+| **Separation of Concerns** | Tách Customer, Driver, Booking, Trip, Payment thành các Entity riêng |
+| **Traceability** | Có thể truy vết Booking → Assignment → Trip → Payment |
+| **Auditability** | Lưu AuditLog cho các thao tác quan trọng |
+| **Security** | Không lưu trực tiếp thông tin thanh toán nhạy cảm |
+| **Scalability** | Location và Notification được tách riêng |
+| **Extensibility** | VehicleType hỗ trợ bổ sung loại dịch vụ |
+| **Payment Retry** | Payment tách khỏi Trip để hỗ trợ nhiều lần thanh toán |
+| **Driver Matching** | DriverAssignment lưu lịch sử Accept / Reject / Timeout |
+
+---
+
+# 8. Tổng quan Data Flow
+
+```text
+Customer
+   │
+   ▼
+Booking
+   │
+   ▼
+DriverAssignment
+   │
+   ├── Reject
+   ├── Timeout
+   └── Accept
+          │
+          ▼
+         Trip
+          │
+     ┌────┼────┐
+     ▼    ▼    ▼
+   Fare Payment Rating
+          │
+          ▼
+   Payment Provider
+```
+
+---
+
+# 9. Kết luận
+
+Mô hình dữ liệu của CAB System được xây dựng xoay quanh các Entity chính:
+
+> **User → Customer / Driver → Vehicle → Booking → DriverAssignment → Trip → Fare → Payment → Rating**
+
+Các Entity hỗ trợ gồm:
+
+> **Location → Notification → AuditLog**
+
+Mô hình ERD này là **Logical Data Model**, được sử dụng làm cơ sở cho các bước tiếp theo:
+
+```text
 Data Modeling
-        ↓
-Entities
-        ↓
+      ↓
 ERD
-        ↓
+      ↓
 Database Design
+      ↓
+API Design
+      ↓
+System Architecture
+      ↓
+Development
+```
 
-Các Entity cốt lõi của CAB:
+> **Kết quả Bước 9:** Xác định được các Entity, thuộc tính chính, Primary Key, Foreign Key và quan hệ giữa các Entity phục vụ toàn bộ vòng đời đặt xe.
 
-User → Customer / Driver → Vehicle → Booking → DriverAssignment → Trip → Fare → Payment → Rating
-
-Đây là ERD mức Logical Data Model, phù hợp để BA trình bày và làm cơ sở cho bước tiếp theo là thiết kế database chi tiết / API / system architecture.
+bước 10: xác định non functional requirement
 
