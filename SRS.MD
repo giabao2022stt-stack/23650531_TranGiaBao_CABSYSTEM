@@ -2696,73 +2696,66 @@ bước 11 và 12 : xác định và vẽ các usecase kí hiệu UC, use case c
 ChatGPT đã nói:
 BƯỚC 11 & 12 – XÁC ĐỊNH VÀ ĐẶC TẢ USE CASE
 1. Mục tiêu
-Xác định các Use Case (UC) chính của CAB System dựa trên Business Requirement và Functional Requirement đã phân tích.
+Xác định các Use Case (UC) chính của CAB System và đặc tả các luồng nghiệp vụ quan trọng dựa trên Business Requirement và Functional Requirement.
 
-Use Case được chia theo các nhóm Actor:
-
-Customer
-Driver
-Operations Staff
-Administrator
-External Payment Provider
-Notification Provider
-Location/Map Provider
 BƯỚC 11 – XÁC ĐỊNH USE CASE
 2. Danh sách Use Case
-Mã	Use Case	Actor chính	Mô tả
-UC01	Customer – Quản lý tài khoản	Customer	Đăng ký, đăng nhập và cập nhật thông tin cá nhân
-UC02	Customer – Tạo Booking	Customer	Nhập điểm đón, điểm đến, loại xe và tạo yêu cầu đặt xe
+Mã	Tên Use Case	Actor chính	Mô tả
+UC01	Customer – Quản lý tài khoản	Customer	Đăng ký, đăng nhập, cập nhật thông tin cá nhân
+UC02	Customer – Tạo Booking	Customer	Nhập điểm đón, điểm đến, chọn loại xe và tạo yêu cầu
 UC03	Customer – Theo dõi Trip	Customer	Theo dõi tài xế, ETA và trạng thái chuyến
-UC04	Customer – Thanh toán	Customer, Payment Provider	Thanh toán chuyến bằng tiền mặt hoặc điện tử
-UC05	Customer – Xem lịch sử Trip	Customer	Xem lịch sử chuyến đi và thông tin cước
-UC06	Customer – Đánh giá Driver	Customer	Đánh giá tài xế sau khi chuyến hoàn thành
+UC04	Customer – Thanh toán	Customer	Thanh toán bằng tiền mặt hoặc trực tuyến
+UC05	Customer – Xem lịch sử Trip	Customer	Xem lịch sử chuyến và cước
+UC06	Customer – Đánh giá Driver	Customer	Đánh giá tài xế sau chuyến
 UC07	Driver – Quản lý hồ sơ	Driver	Cập nhật thông tin cá nhân và phương tiện
-UC08	Driver – Quản lý trạng thái hoạt động	Driver	Chuyển trạng thái Online/Offline/Available
-UC09	Driver – Nhận/Từ chối Booking	Driver	Nhận hoặc từ chối yêu cầu chuyến
-UC10	Driver – Cập nhật trạng thái Trip	Driver	Cập nhật các trạng thái trong quá trình thực hiện chuyến
-UC11	Driver – Cập nhật vị trí	Driver	Gửi vị trí hiện tại để hỗ trợ Matching và ETA
-UC12	Driver Matching	System, Driver	Tìm, ưu tiên và phân công tài xế
-UC13	Fare Calculation	System	Tính cước dựa trên thông tin chuyến
-UC14	Notification Management	System, Notification Provider	Gửi thông báo đến Customer và Driver
-UC15	Operations – Quản lý Customer	Operations Staff	Tra cứu và quản lý thông tin khách hàng
-UC16	Operations – Quản lý Driver	Operations Staff	Quản lý tài xế và trạng thái hoạt động
-UC17	Operations – Quản lý Vehicle	Operations Staff	Quản lý thông tin phương tiện
-UC18	Operations – Quản lý Trip	Operations Staff	Theo dõi và hỗ trợ xử lý các chuyến đi
-UC19	Operations – Tra cứu Transaction	Operations Staff, Finance	Tra cứu giao dịch và trạng thái thanh toán
-UC20	Reporting	Operations, Management	Xem báo cáo chuyến, doanh thu và hiệu quả tài xế
-UC21	Authorization Management	Administrator	Quản lý Role và Permission
-UC22	Audit Log	Administrator	Theo dõi các thao tác quan trọng trong hệ thống
+UC08	Driver – Quản lý trạng thái	Driver	Online/Offline/Available
+UC09	Driver – Nhận/Từ chối Booking	Driver	Accept hoặc Reject yêu cầu chuyến
+UC10	Driver – Cập nhật Trip	Driver	Cập nhật trạng thái chuyến
+UC11	Driver – Cập nhật vị trí	Driver	Gửi vị trí hiện tại
+UC12	Driver Matching	System	Tìm và phân công tài xế
+UC13	Fare Calculation	System	Tính cước chuyến
+UC14	Notification	System	Gửi thông báo cho Customer/Driver
+UC15	Quản lý Customer	Operations	Quản lý khách hàng
+UC16	Quản lý Driver	Operations	Quản lý tài xế
+UC17	Quản lý Vehicle	Operations	Quản lý phương tiện
+UC18	Quản lý Trip	Operations	Theo dõi và xử lý chuyến
+UC19	Tra cứu Transaction	Operations/Finance	Tra cứu giao dịch
+UC20	Reporting	Operations/Management	Báo cáo hoạt động
+UC21	Authorization Management	Administrator	Quản lý quyền
+UC22	Audit Log	Administrator	Theo dõi thao tác quan trọng
 
 3. Use Case Diagram
+Code dưới đây có thể copy trực tiếp vào file .md trên GitHub.
+
 flowchart LR
 
-    Customer["👤 Customer"]
-    Driver["🚗 Driver"]
-    Operations["👨‍💼 Operations Staff"]
-    Admin["🔐 Administrator"]
-    Finance["💰 Finance"]
-    Payment["💳 Payment Provider"]
-    Notification["🔔 Notification Provider"]
-    Location["📍 Location / Map Provider"]
+    Customer["Customer"]
+    Driver["Driver"]
+    Operations["Operations Staff"]
+    Admin["Administrator"]
+    Finance["Finance"]
+    Payment["Payment Provider"]
+    Notification["Notification Provider"]
+    Location["Location / Map Provider"]
 
-    subgraph CAB["CAB System"]
+    subgraph CAB["CAB SYSTEM"]
 
-        UC01["UC01<br/>Customer - Quản lý tài khoản"]
-        UC02["UC02<br/>Customer - Tạo Booking"]
-        UC03["UC03<br/>Customer - Theo dõi Trip"]
-        UC04["UC04<br/>Customer - Thanh toán"]
-        UC05["UC05<br/>Customer - Xem lịch sử Trip"]
-        UC06["UC06<br/>Customer - Đánh giá Driver"]
+        UC01["UC01<br/>Quản lý tài khoản"]
+        UC02["UC02<br/>Tạo Booking"]
+        UC03["UC03<br/>Theo dõi Trip"]
+        UC04["UC04<br/>Thanh toán"]
+        UC05["UC05<br/>Lịch sử Trip"]
+        UC06["UC06<br/>Đánh giá Driver"]
 
-        UC07["UC07<br/>Driver - Quản lý hồ sơ"]
-        UC08["UC08<br/>Driver - Quản lý trạng thái"]
-        UC09["UC09<br/>Driver - Nhận/Từ chối Booking"]
-        UC10["UC10<br/>Driver - Cập nhật Trip"]
-        UC11["UC11<br/>Driver - Cập nhật vị trí"]
+        UC07["UC07<br/>Quản lý hồ sơ Driver"]
+        UC08["UC08<br/>Quản lý trạng thái Driver"]
+        UC09["UC09<br/>Accept / Reject Booking"]
+        UC10["UC10<br/>Cập nhật Trip"]
+        UC11["UC11<br/>Cập nhật vị trí"]
 
         UC12["UC12<br/>Driver Matching"]
         UC13["UC13<br/>Fare Calculation"]
-        UC14["UC14<br/>Notification Management"]
+        UC14["UC14<br/>Notification"]
 
         UC15["UC15<br/>Quản lý Customer"]
         UC16["UC16<br/>Quản lý Driver"]
@@ -2771,7 +2764,7 @@ flowchart LR
         UC19["UC19<br/>Tra cứu Transaction"]
         UC20["UC20<br/>Reporting"]
 
-        UC21["UC21<br/>Authorization Management"]
+        UC21["UC21<br/>Authorization"]
         UC22["UC22<br/>Audit Log"]
     end
 
@@ -2788,16 +2781,6 @@ flowchart LR
     Driver --> UC10
     Driver --> UC11
 
-    UC02 --> UC12
-    UC12 --> UC09
-    UC10 --> UC13
-    UC04 --> UC13
-
-    UC14 --> Notification
-    UC11 --> Location
-    UC12 --> Location
-    UC04 --> Payment
-
     Operations --> UC15
     Operations --> UC16
     Operations --> UC17
@@ -2805,42 +2788,59 @@ flowchart LR
     Operations --> UC19
     Operations --> UC20
 
-    Finance --> UC19
     Admin --> UC21
     Admin --> UC22
 
+    Finance --> UC19
+
+    UC02 --> UC12
+    UC12 --> UC09
+    UC10 --> UC13
+    UC13 --> UC04
+
+    UC11 --> Location
+    UC12 --> Location
+    UC04 --> Payment
+    UC14 --> Notification
+
 BƯỚC 12 – ĐẶC TẢ USE CASE
-4. UC01 – Customer: Quản lý tài khoản
+4. UC01 – Quản lý tài khoản Customer
 Thành phần	Nội dung
-Use Case ID	UC01
-Tên	Customer – Quản lý tài khoản
+Use Case	UC01
+Tên	Quản lý tài khoản
 Actor	Customer
-Mục tiêu	Cho phép khách hàng đăng ký, đăng nhập và cập nhật thông tin
+Mục tiêu	Đăng ký, đăng nhập và cập nhật thông tin
 Pre-condition	Customer chưa đăng nhập hoặc đã có tài khoản
-Post-condition	Thông tin tài khoản được tạo/cập nhật thành công
-Trigger	Customer thực hiện đăng ký/đăng nhập/cập nhật hồ sơ
+Trigger	Customer thực hiện chức năng tài khoản
+Post-condition	Tài khoản được tạo/cập nhật thành công
 
 Main Flow
-Customer mở chức năng tài khoản.
-Customer đăng ký hoặc đăng nhập.
-Hệ thống xác thực thông tin.
-Hệ thống tạo phiên đăng nhập.
-Customer có thể cập nhật thông tin cá nhân.
-Hệ thống lưu thông tin.
+Customer
+   ↓
+Đăng ký / Đăng nhập
+   ↓
+Hệ thống xác thực
+   ↓
+Đăng nhập thành công
+   ↓
+Cập nhật thông tin cá nhân
+   ↓
+Lưu thông tin
+
 Exception
-Thông tin đăng nhập không hợp lệ.
 Tài khoản đã tồn tại.
-Dữ liệu cập nhật không hợp lệ.
+Sai thông tin đăng nhập.
+Dữ liệu không hợp lệ.
 Hệ thống không thể lưu dữ liệu.
-5. UC02 – Customer: Tạo Booking
+5. UC02 – Tạo Booking
 Thành phần	Nội dung
-Use Case ID	UC02
-Tên	Customer – Tạo Booking
+Use Case	UC02
+Tên	Tạo Booking
 Actor	Customer
 Mục tiêu	Tạo yêu cầu đặt xe
 Pre-condition	Customer đã đăng nhập
-Post-condition	Booking được tạo và chuyển sang trạng thái tìm Driver
-Trigger	Customer chọn chức năng đặt xe
+Trigger	Customer chọn đặt xe
+Post-condition	Booking được tạo và chuyển sang tìm Driver
 
 Main Flow
 Customer
@@ -2849,114 +2849,113 @@ Nhập điểm đón
    ↓
 Nhập điểm đến
    ↓
-Chọn loại xe/dịch vụ
+Chọn loại xe
    ↓
 Xác nhận Booking
    ↓
 Hệ thống tạo Booking
    ↓
-Bắt đầu Driver Matching
+UC12 - Driver Matching
 
 Exception
 Điểm đón không hợp lệ.
 Điểm đến không hợp lệ.
 Không xác định được vị trí.
-Dịch vụ/loại xe không khả dụng.
-Mất kết nối khi tạo Booking.
+Không có loại xe phù hợp.
+Mất kết nối mạng.
 6. UC12 – Driver Matching
 Thành phần	Nội dung
-Use Case ID	UC12
+Use Case	UC12
 Tên	Driver Matching
 Actor	System
-Actor phụ	Driver, Location/Map Provider
+Actor phụ	Driver, Location Provider
 Mục tiêu	Tìm và phân công Driver phù hợp
 Pre-condition	Booking đã được tạo
-Post-condition	Driver được phân công hoặc Customer được thông báo không có Driver
-Trigger	Booking chuyển sang trạng thái SEARCHING_DRIVER
+Trigger	Booking chuyển sang SEARCHING_DRIVER
+Post-condition	Driver được phân công hoặc thông báo không tìm được Driver
 
 Main Flow
+Accept
+Reject
+Timeout
+Không
 Booking được tạo
-       ↓
 Xác định vị trí Customer
-       ↓
-Tìm Driver Online/Available
-       ↓
+Tìm Driver Available
 Lọc Driver phù hợp
-       ↓
 Ưu tiên Driver
-       ↓
-Gửi yêu cầu chuyến
-       ↓
-Driver phản hồi
-       ↓
-    Accept?
-    /     \
-  YES      NO / TIMEOUT
-   ↓           ↓
-Assign      Driver tiếp theo
-   ↓           ↓
-Notify       Retry Matching
-Customer
-
+Gửi yêu cầu Booking
+Driver phản hồi?
+Assign Driver
+Thông báo Customer
+Tìm Driver tiếp theo
+Còn Driver phù hợp?
+Thông báo CustomerKhông tìm được Driver
 Business Rules
-Chỉ Driver đủ điều kiện mới được tham gia Matching.
-Driver phải ở trạng thái Available.
+Chỉ Driver đang Available mới được Matching.
 Driver phải phù hợp với loại xe/dịch vụ.
-Ưu tiên Driver phù hợp và gần Customer.
-Driver không phản hồi trong thời gian quy định → chuyển sang Driver tiếp theo.
-Driver từ chối → tiếp tục tìm Driver khác.
-Không tìm được Driver → thông báo Customer.
-7. UC09 – Driver: Nhận/Từ chối Booking
+Ưu tiên Driver gần Customer và phù hợp tiêu chí vận hành.
+Driver Reject → tìm Driver tiếp theo.
+Driver Timeout → tìm Driver tiếp theo.
+Không có Driver → thông báo Customer.
+Customer không cần tạo lại Booking.
+7. UC09 – Driver Accept / Reject Booking
 Thành phần	Nội dung
-Use Case ID	UC09
-Tên	Driver – Nhận/Từ chối Booking
+Use Case	UC09
+Tên	Nhận/Từ chối Booking
 Actor	Driver
-Pre-condition	Driver đang Available và nhận được Booking
-Post-condition	Booking được Accept hoặc chuyển sang Driver tiếp theo
-Trigger	Driver nhận được thông báo Booking
+Pre-condition	Driver Available và nhận được Booking
+Trigger	Driver nhận thông báo chuyến
+Post-condition	Booking được Accept hoặc chuyển sang Driver khác
 
 Main Flow
-Hệ thống gửi Booking cho Driver.
-Driver xem thông tin chuyến.
-Driver chọn Accept hoặc Reject.
-Nếu Accept → hệ thống gán Driver.
-Nếu Reject → hệ thống tiếp tục tìm Driver khác.
-Exception
-Driver hết thời gian phản hồi.
-Driver mất kết nối.
-Booking đã được Driver khác nhận.
-Booking đã bị Customer hủy.
-8. UC10 – Driver: Cập nhật trạng thái Trip
+Accept
+Reject
+Timeout
+Có
+Không
+Driver nhận Booking
+Xem thông tin chuyến
+Driver quyết định
+Gán Driver
+Thông báo Customer
+Tìm Driver tiếp theo
+Còn Driver?
+Thông báo CustomerKhông có Driver
+8. UC10 – Driver cập nhật Trip
+Trip State
+stateDiagram-v2
+    [*] --> DRIVER_ASSIGNED
+    DRIVER_ASSIGNED --> DRIVER_ARRIVING
+    DRIVER_ARRIVING --> DRIVER_ARRIVED
+    DRIVER_ARRIVED --> PASSENGER_PICKED_UP
+    PASSENGER_PICKED_UP --> IN_PROGRESS
+    IN_PROGRESS --> COMPLETED
+
+    DRIVER_ASSIGNED --> CANCELLED
+    DRIVER_ARRIVING --> CANCELLED
+    DRIVER_ARRIVED --> CANCELLED
+    IN_PROGRESS --> FAILED
+
 Các trạng thái chính
-DRIVER_ASSIGNED
-       ↓
-DRIVER_ARRIVING
-       ↓
-DRIVER_ARRIVED
-       ↓
-PASSENGER_PICKED_UP
-       ↓
-IN_PROGRESS
-       ↓
-COMPLETED
-
-Exception States
-CANCELLED
-NO_DRIVER
-FAILED
-PAYMENT_FAILED
-
-Driver chỉ được cập nhật trạng thái phù hợp với trạng thái hiện tại của Trip.
+Status	Ý nghĩa
+DRIVER_ASSIGNED	Đã phân công tài xế
+DRIVER_ARRIVING	Tài xế đang đến
+DRIVER_ARRIVED	Tài xế đã đến
+PASSENGER_PICKED_UP	Đã đón khách
+IN_PROGRESS	Đang thực hiện chuyến
+COMPLETED	Hoàn thành
+CANCELLED	Đã hủy
+FAILED	Chuyến bị lỗi
 
 9. UC13 – Fare Calculation
 Thành phần	Nội dung
-Use Case ID	UC13
-Tên	Fare Calculation
+Use Case	UC13
+Tên	Tính cước
 Actor	System
-Mục tiêu	Xác định số tiền Customer phải thanh toán
 Pre-condition	Trip đã hoàn thành
-Post-condition	Fare được tính và lưu thành công
 Trigger	Trip chuyển sang COMPLETED
+Post-condition	Fare được tính và lưu
 
 Main Flow
 Trip COMPLETED
@@ -2969,134 +2968,132 @@ Tính Fare
       ↓
 Lưu Fare
       ↓
-Hiển thị số tiền cho Customer
+Hiển thị số tiền
 
-Công thức tính cước, phí tối thiểu, phí chờ và phụ phí vẫn cần xác nhận với khách hàng.
+Công thức tính cước, giá tối thiểu và phụ phí cần được xác nhận với khách hàng.
 
-10. UC04 – Customer: Thanh toán
+10. UC04 – Thanh toán
 Thành phần	Nội dung
-Use Case ID	UC04
-Tên	Customer – Thanh toán
+Use Case	UC04
+Tên	Thanh toán
 Actor	Customer
 Actor phụ	Payment Provider
-Mục tiêu	Thanh toán cước chuyến
 Phương thức	Cash / Electronic Payment
+Pre-condition	Fare đã được xác định
+Post-condition	Payment được ghi nhận
 
 Main Flow
+Cash
+Electronic
+Success
+Failed
 Trip Completed
-      ↓
 Fare Calculation
-      ↓
-Customer chọn phương thức
-      ↓
-   ┌──────────────┐
-   │              │
- Cash         Electronic
-   │              │
-   ↓              ↓
-Ghi nhận      Payment Provider
-thanh toán        ↓
-              Payment Result
-              /          \
-          Success        Failed
-             ↓             ↓
-        Completed       Notify/Retry
-
-Exception
-Payment Provider không phản hồi.
-Thanh toán thất bại.
-Timeout.
-Customer thực hiện retry.
-Callback thanh toán bị gửi trùng.
-11. UC03 – Customer: Theo dõi Trip
+Customer chọn phương thức thanh toán
+Payment Method
+Ghi nhận Cash Payment
+Payment Completed
+Payment Provider
+Payment Result
+Payment Completed
+Thông báo thất bại
+Retry theo chính sách
+11. UC03 – Theo dõi Trip
 Thành phần	Nội dung
-Use Case ID	UC03
-Tên	Customer – Theo dõi Trip
+Use Case	UC03
+Tên	Theo dõi Trip
 Actor	Customer
 Mục tiêu	Theo dõi tài xế và trạng thái chuyến
-Thông tin hiển thị	Driver, Vehicle, vị trí, ETA, trạng thái Trip
+Thông tin	Driver, Vehicle, Location, ETA, Trip Status
 
 Main Flow
 Customer mở Trip
-       ↓
+      ↓
 Hiển thị Driver
-       ↓
+      ↓
 Nhận Location
-       ↓
-Cập nhật ETA
-       ↓
+      ↓
+Tính/Cập nhật ETA
+      ↓
 Cập nhật Trip Status
-       ↓
-Customer theo dõi realtime
+      ↓
+Customer theo dõi
 
-12. UC06 – Customer: Đánh giá Driver
+12. UC06 – Đánh giá Driver
 Thành phần	Nội dung
-Use Case ID	UC06
-Tên	Customer – Đánh giá Driver
+Use Case	UC06
+Tên	Đánh giá Driver
 Actor	Customer
 Pre-condition	Trip đã COMPLETED
-Post-condition	Rating được lưu vào hệ thống
+Trigger	Customer chọn đánh giá
+Post-condition	Rating được lưu
 
 Main Flow
-Trip hoàn thành.
-Hệ thống hiển thị chức năng đánh giá.
-Customer chọn mức đánh giá.
-Customer nhập nhận xét nếu có.
-Hệ thống lưu Rating.
+Trip COMPLETED
+      ↓
+Customer chọn Rating
+      ↓
+Nhập điểm đánh giá
+      ↓
+Nhập nhận xét
+      ↓
+Submit
+      ↓
+System lưu Rating
+
 Business Rule
 Customer chỉ được đánh giá Driver sau khi Trip hoàn thành.
 
-13. UC18 – Operations: Quản lý Trip
+13. UC18 – Operations quản lý Trip
 Thành phần	Nội dung
-Use Case ID	UC18
-Tên	Operations – Quản lý Trip
+Use Case	UC18
+Tên	Quản lý Trip
 Actor	Operations Staff
-Mục tiêu	Theo dõi và hỗ trợ xử lý Trip
-Chức năng	Xem Trip, trạng thái, Driver, Customer và xử lý Trip lỗi
+Mục tiêu	Theo dõi và xử lý Trip
+Pre-condition	Operations đã đăng nhập
 
 Main Flow
 Operations Login
-       ↓
-Mở Dashboard
-       ↓
+      ↓
+Dashboard
+      ↓
 Xem danh sách Trip
-       ↓
+      ↓
 Chọn Trip
-       ↓
-Xem trạng thái / thông tin
-       ↓
-Xử lý trường hợp bất thường
-       ↓
-Ghi nhận Audit Log
+      ↓
+Xem trạng thái
+      ↓
+Xử lý sự cố nếu có
+      ↓
+Ghi Audit Log
 
 14. UC20 – Reporting
-Báo cáo	Nội dung
-Trip Report	Số lượng chuyến
+Loại báo cáo	Nội dung
+Trip Report	Tổng số chuyến
 Revenue Report	Doanh thu
 Completion Report	Tỷ lệ hoàn thành
 Cancellation Report	Tỷ lệ hủy
-Driver Performance	Hiệu quả tài xế
-Payment Report	Tình trạng giao dịch
+Driver Performance	Hiệu quả Driver
+Payment Report	Kết quả thanh toán
 
-15. Quan hệ giữa các Use Case chính
+15. Luồng Use Case tổng thể
 UC01Quản lý tài khoản
 UC02Tạo Booking
 UC12Driver Matching
-UC09Accept / Reject Booking
-UC10Cập nhật Trip
+UC09Driver Accept / Reject
+UC10Thực hiện Trip
 UC03Theo dõi Trip
 UC13Fare Calculation
 UC04Payment
 UC06Rating
 UC14Notification
-UC20Reporting
 16. Ưu tiên Use Case cho MVP
 Priority	Use Case	Mức độ
 P1	UC01 – Quản lý tài khoản	Critical
 P1	UC02 – Tạo Booking	Critical
 P1	UC12 – Driver Matching	Critical
 P1	UC09 – Accept/Reject Booking	Critical
-P1	UC10 – Cập nhật Trip	Critical
+P1	UC10 – Thực hiện Trip	Critical
 P1	UC03 – Theo dõi Trip	Critical
 P1	UC13 – Fare Calculation	Critical
 P1	UC04 – Payment	Critical
@@ -3108,9 +3105,20 @@ P2	UC21 – Authorization	High
 P2	UC22 – Audit Log	High
 
 Kết luận
-Bước 11 xác định Use Case và Actor của CAB System. Bước 12 tiếp tục đặc tả từng Use Case theo các thành phần: Actor → Pre-condition → Trigger → Main Flow → Alternative/Exception Flow → Post-condition → Business Rules.
+Bước 11: Xác định Actor và danh sách Use Case của CAB System.
 
-Luồng nghiệp vụ cốt lõi cần ưu tiên trong giai đoạn MVP:
+Bước 12: Đặc tả Use Case theo cấu trúc:
+
+Use Case
+→ Actor
+→ Pre-condition
+→ Trigger
+→ Main Flow
+→ Alternative / Exception Flow
+→ Post-condition
+→ Business Rules
+
+Luồng nghiệp vụ cốt lõi của CAB:
 
 Customer
    ↓
@@ -3118,7 +3126,7 @@ UC02 – Tạo Booking
    ↓
 UC12 – Driver Matching
    ↓
-UC09 – Driver Accept/Reject
+UC09 – Driver Accept / Reject
    ↓
 UC10 – Thực hiện Trip
    ↓
@@ -3128,4 +3136,4 @@ UC04 – Payment
    ↓
 UC06 – Rating
 
-Đây là bộ Use Case nền tảng để chuyển sang Use Case Specification chi tiết + Acceptance Criteria + Test Case ở các bước tiếp theo.
+Bộ Use Case này là cơ sở để chuyển sang Acceptance Criteria → Test Case → Solution Design → Development.
