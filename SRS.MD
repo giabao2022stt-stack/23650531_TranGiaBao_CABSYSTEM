@@ -383,6 +383,221 @@ Các Business Goals là cơ sở để BA tiếp tục xác định:
 
 **Business Goal → Business Requirement → Functional Requirement → Use Case → Acceptance Criteria**
 
+bước 4 : xác định cái phạm vi yêu cầu để thực hiện, ví dụ, quản lý khách hàng, quản lý tài xế, xác định các mô đun cơ bản , quản lý trong bảng MBB,xác định nên làm cái gì và các cái gì không nên làm, làm theo dạng markdow
+# BƯỚC 4 – XÁC ĐỊNH PHẠM VI VÀ MODULE HỆ THỐNG
+
+## 1. Mục tiêu
+
+Xác định phạm vi triển khai **CAB System trong 7 tuần**, bao gồm:
+
+- Các chức năng bắt buộc phải thực hiện.
+- Các chức năng nên thực hiện nếu còn thời gian.
+- Các chức năng có thể phát triển ở giai đoạn sau.
+- Các chức năng chưa thực hiện trong phạm vi hiện tại.
+
+---
+
+## 2. Phạm vi hệ thống
+
+### 2.1. In Scope – Trong phạm vi
+
+| # | Module | Phạm vi chính |
+|---:|---|---|
+| 1 | **Quản lý Customer** | Đăng ký, đăng nhập, cập nhật thông tin, xem lịch sử chuyến |
+| 2 | **Quản lý Driver** | Hồ sơ, trạng thái hoạt động, nhận/từ chối chuyến |
+| 3 | **Quản lý Vehicle** | Thông tin phương tiện, loại xe, trạng thái phương tiện |
+| 4 | **Booking Management** | Tạo, xem và theo dõi yêu cầu đặt xe |
+| 5 | **Driver Matching** | Tìm, ưu tiên và phân công Driver tự động |
+| 6 | **Trip Management** | Quản lý trạng thái và vòng đời chuyến đi |
+| 7 | **Location / ETA** | Cập nhật vị trí Driver và hỗ trợ tính ETA |
+| 8 | **Fare Management** | Tính và xác định cước chuyến |
+| 9 | **Payment** | Thanh toán tiền mặt và thanh toán điện tử |
+| 10 | **Notification** | Thông báo trạng thái Booking, Trip và Payment |
+| 11 | **Rating** | Customer đánh giá Driver sau chuyến |
+| 12 | **Operation Management** | Theo dõi và xử lý Customer, Driver, Vehicle, Trip |
+| 13 | **Reporting** | Báo cáo chuyến, doanh thu, hoàn thành, hủy |
+| 14 | **Authentication & Authorization** | Đăng nhập, xác thực và phân quyền |
+| 15 | **Audit Log** | Lưu vết các thao tác quan trọng |
+
+---
+
+## 3. Module cơ bản của hệ thống
+
+```mermaid
+flowchart TD
+    CAB["CAB SYSTEM"]
+
+    CAB --> IAM["Authentication & Authorization"]
+    CAB --> CUSTOMER["Customer Management"]
+    CAB --> DRIVER["Driver Management"]
+    CAB --> VEHICLE["Vehicle Management"]
+    CAB --> BOOKING["Booking Management"]
+    CAB --> MATCHING["Driver Matching"]
+    CAB --> TRIP["Trip Management"]
+    CAB --> LOCATION["Location / ETA"]
+    CAB --> FARE["Fare Management"]
+    CAB --> PAYMENT["Payment"]
+    CAB --> NOTIFICATION["Notification"]
+    CAB --> RATING["Rating"]
+    CAB --> OPERATION["Operation Management"]
+    CAB --> REPORTING["Reporting"]
+    CAB --> AUDIT["Audit Log"]
+
+    PAYMENT --> PAYMENT_PROVIDER["External Payment Provider"]
+    NOTIFICATION --> NOTIFICATION_PROVIDER["Notification Provider"]
+    LOCATION --> MAP_PROVIDER["Map / Location Provider"]
+```
+
+---
+
+# 4. Phân loại phạm vi theo MBB
+
+> **MBB = Must / Should / Could / Won't**
+
+| MBB | Module / Chức năng | Phạm vi thực hiện |
+|---|---|---|
+| **M – Must** | Customer Management | Đăng ký, đăng nhập, cập nhật hồ sơ |
+| **M – Must** | Driver Management | Hồ sơ, trạng thái sẵn sàng, nhận/từ chối chuyến |
+| **M – Must** | Vehicle Management | Quản lý thông tin phương tiện |
+| **M – Must** | Booking Management | Tạo và quản lý Booking |
+| **M – Must** | Driver Matching | Tự động tìm và phân công Driver |
+| **M – Must** | Trip Management | Quản lý trạng thái chuyến |
+| **M – Must** | Fare Management | Tính cước chuyến |
+| **M – Must** | Payment | Tiền mặt và thanh toán điện tử |
+| **M – Must** | Notification | Thông báo các trạng thái quan trọng |
+| **M – Must** | Authentication / Authorization | Xác thực và phân quyền |
+| **M – Must** | Audit Log | Lưu vết thao tác quan trọng |
+| **S – Should** | Location / ETA | Theo dõi vị trí và thời gian dự kiến |
+| **S – Should** | Rating | Đánh giá Driver sau chuyến |
+| **S – Should** | Operation Management | Dashboard và xử lý các trường hợp Trip lỗi |
+| **S – Should** | Basic Reporting | Báo cáo chuyến, doanh thu, hoàn thành, hủy |
+| **C – Could** | Advanced Reporting | Dashboard phân tích chuyên sâu |
+| **C – Could** | Advanced Driver Ranking | Xếp hạng Driver nâng cao |
+| **C – Could** | Notification đa kênh nâng cao | Mở rộng nhiều provider/kênh |
+| **C – Could** | Khuyến mãi / Voucher | Coupon, promotion |
+| **C – Could** | Loyalty / Membership | Điểm thưởng, hạng thành viên |
+| **W – Won't** | Tính năng ngoài phạm vi MVP | Chưa triển khai trong giai đoạn 7 tuần |
+
+---
+
+## 5. Những nội dung KHÔNG nên làm trong giai đoạn hiện tại
+
+Để đảm bảo tiến độ **7 tuần**, các chức năng sau nên đưa ra ngoài phạm vi MVP:
+
+| Chức năng | Lý do |
+|---|---|
+| **Loyalty / Membership** | Không ảnh hưởng đến quy trình đặt xe cốt lõi |
+| **Voucher / Promotion** | Cần thêm nhiều Business Rules và logic tính giá |
+| **Advanced Analytics** | Không phải chức năng bắt buộc để vận hành MVP |
+| **AI Driver Recommendation** | Có thể phát triển sau khi có đủ dữ liệu thực tế |
+| **Dynamic Pricing nâng cao** | Fare Policy hiện chưa được khách hàng chốt |
+| **Multi-service phức tạp** | Chưa cần thiết trong phiên bản đầu |
+| **Nhiều Payment Provider** | MVP chỉ cần tích hợp Provider được thống nhất |
+| **Nhiều Notification Provider** | Thiết kế mở rộng nhưng chưa cần triển khai tất cả |
+| **International / Multi-country** | Chưa có yêu cầu kinh doanh |
+| **Advanced Customer Loyalty** | Không thuộc quy trình đặt xe cốt lõi |
+
+> **Lưu ý:** "Won't" không có nghĩa là hệ thống không bao giờ hỗ trợ. Đây là các chức năng **chưa thực hiện trong phạm vi phiên bản hiện tại** và có thể đưa vào các phase tiếp theo.
+
+---
+
+# 6. Phạm vi ưu tiên cho 7 tuần
+
+### Phase 1 – Core Foundation
+
+- Authentication
+- Customer Management
+- Driver Management
+- Vehicle Management
+- Booking Management
+
+### Phase 2 – Core Ride
+
+- Driver Matching
+- Trip Management
+- Location / ETA
+- Notification
+
+### Phase 3 – Payment & Operation
+
+- Fare Management
+- Payment
+- Operation Management
+- Rating
+
+### Phase 4 – Reporting & Stabilization
+
+- Basic Reporting
+- Audit Log
+- Integration Testing
+- Performance Testing
+- Security Testing
+- Bug Fixing & Deployment
+
+---
+
+## 7. Scope Boundary
+
+```mermaid
+flowchart LR
+    IN["IN SCOPE<br/>MVP - 7 tuần"]
+
+    IN --> A["Customer"]
+    IN --> B["Driver"]
+    IN --> C["Vehicle"]
+    IN --> D["Booking"]
+    IN --> E["Driver Matching"]
+    IN --> F["Trip"]
+    IN --> G["Fare"]
+    IN --> H["Payment"]
+    IN --> I["Notification"]
+    IN --> J["Operation"]
+    IN --> K["Authentication"]
+    IN --> L["Audit"]
+
+    OUT["OUT OF SCOPE<br/>Phase tiếp theo"]
+
+    OUT --> M["Loyalty"]
+    OUT --> N["Voucher / Promotion"]
+    OUT --> O["Advanced Analytics"]
+    OUT --> P["AI Recommendation"]
+    OUT --> Q["Advanced Dynamic Pricing"]
+    OUT --> R["Multi-country"]
+```
+
+---
+
+# 8. Kết luận phạm vi
+
+### Must Have – Bắt buộc
+
+> **Customer → Driver → Vehicle → Booking → Driver Matching → Trip → Fare → Payment → Notification → Operation → Authentication → Audit**
+
+Đây là **core scope** cần ưu tiên để đảm bảo hệ thống có thể vận hành được trong 7 tuần.
+
+### Should Have – Nên có
+
+> **Location / ETA → Rating → Operation Dashboard → Basic Reporting**
+
+Các chức năng này nâng cao trải nghiệm và hiệu quả vận hành nhưng có thể điều chỉnh ưu tiên theo tiến độ.
+
+### Could Have – Có thể phát triển sau
+
+> **Advanced Reporting → Voucher → Loyalty → AI Recommendation → Advanced Dynamic Pricing**
+
+### Won't Have – Chưa thực hiện
+
+> Các tính năng không ảnh hưởng đến **core booking flow** và chưa có yêu cầu kinh doanh rõ ràng sẽ được đưa sang **Phase 2 / Future Release**.
+
+---
+
+## 9. Nguyên tắc kiểm soát Scope
+
+> **Ưu tiên hoàn thành End-to-End Core Flow trước:**
+
+**Customer tạo Booking → Driver Matching → Driver nhận chuyến → Trip Completed → Fare → Payment → Notification**
+
+Nếu tiến độ bị ảnh hưởng, các chức năng thuộc nhóm **Could Have** sẽ được cắt giảm trước, **không cắt các chức năng Must Have của Core Flow**.
 
 
 
