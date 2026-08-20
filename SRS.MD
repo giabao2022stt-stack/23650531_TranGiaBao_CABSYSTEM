@@ -2385,4 +2385,310 @@ Development
 > **Kết quả Bước 9:** Xác định được các Entity, thuộc tính chính, Primary Key, Foreign Key và quan hệ giữa các Entity phục vụ toàn bộ vòng đời đặt xe.
 
 bước 10: xác định non functional requirement
+BƯỚC 10 – XÁC ĐỊNH NON-FUNCTIONAL REQUIREMENTS
+1. Mục tiêu
+Xác định các Non-Functional Requirements (NFR) nhằm đảm bảo CAB System hoạt động nhanh, ổn định, bảo mật, có khả năng mở rộng và dễ bảo trì.
 
+2. Danh sách Non-Functional Requirements
+Mã	Nhóm	Tên yêu cầu	Mô tả	Mức độ
+NFR01	Performance	Hiệu năng	Hệ thống phải phản hồi nhanh đối với các chức năng chính.	Critical
+NFR02	Performance	Driver Matching	Hệ thống phải tìm và phân công tài xế trong thời gian phù hợp.	Critical
+NFR03	Scalability	Khả năng mở rộng	Có thể mở rộng khi số lượng khách hàng, tài xế và chuyến đi tăng.	Critical
+NFR04	Availability	Tính sẵn sàng	Hệ thống phải hoạt động ổn định, đặc biệt trong giờ cao điểm.	Critical
+NFR05	Reliability	Độ tin cậy	Lỗi Payment hoặc Notification không được làm dừng toàn bộ hệ thống.	Critical
+NFR06	Security	Bảo mật	Bảo vệ dữ liệu cá nhân, phương tiện, vị trí và giao dịch.	Critical
+NFR07	Authentication	Xác thực	Người dùng phải được xác thực trước khi sử dụng chức năng yêu cầu tài khoản.	High
+NFR08	Authorization	Phân quyền	Kiểm soát quyền truy cập đối với các chức năng quản trị.	Critical
+NFR09	Data Privacy	Bảo mật dữ liệu thanh toán	Không lưu trực tiếp thông tin thẻ/tài khoản thanh toán nhạy cảm.	Critical
+NFR10	Audit	Lưu vết	Ghi nhận các thao tác quan trọng để phục vụ kiểm tra và xử lý sự cố.	High
+NFR11	Maintainability	Khả năng bảo trì	Dễ sửa lỗi, nâng cấp và thay đổi từng module.	High
+NFR12	Extensibility	Khả năng mở rộng chức năng	Có thể thêm dịch vụ, Payment Provider và Notification Provider mới.	High
+NFR13	Deployability	Khả năng triển khai	Có thể triển khai chức năng mới từng phần mà hạn chế ảnh hưởng hệ thống.	High
+NFR14	Fault Tolerance	Khả năng chịu lỗi	Có cơ chế xử lý khi Payment, Notification, GPS hoặc Network gặp lỗi.	Critical
+NFR15	Data Integrity	Toàn vẹn dữ liệu	Đảm bảo dữ liệu Booking, Trip, Fare và Payment chính xác, nhất quán.	Critical
+NFR16	Monitoring	Giám sát	Theo dõi trạng thái, hiệu năng và lỗi của hệ thống.	High
+NFR17	Backup & Recovery	Sao lưu và phục hồi	Dữ liệu quan trọng phải được backup và có khả năng phục hồi.	High
+
+3. Các yêu cầu NFR trọng yếu
+NFR01 – Performance
+Hệ thống phải đảm bảo thời gian phản hồi phù hợp đối với:
+
+Đăng nhập.
+Tạo Booking.
+Tìm tài xế.
+Theo dõi Trip.
+Cập nhật trạng thái Trip.
+Thanh toán.
+Cần xác nhận: thời gian phản hồi tối đa và SLA cụ thể với khách hàng.
+
+NFR02 – Driver Matching Performance
+Driver Matching là chức năng quan trọng của hệ thống.
+
+Customer tạo Booking
+        ↓
+Xác định vị trí
+        ↓
+Tìm Driver phù hợp
+        ↓
+Ưu tiên Driver
+        ↓
+Gửi yêu cầu
+        ↓
+Driver Accept
+
+Mục tiêu là giảm thời gian khách hàng phải chờ tài xế.
+
+NFR03 – Scalability
+Hệ thống phải có khả năng mở rộng khi:
+
+Số lượng Customer tăng.
+Số lượng Driver tăng.
+Số lượng Booking tăng.
+Số lượng cập nhật Location tăng.
+Lưu lượng Notification tăng.
+Các module có tải cao cần có khả năng scale độc lập.
+
+NFR04 – Availability
+CAB System phải hoạt động ổn định trong thời gian nhu cầu cao.
+
+Peak Hour
+    ↓
+Traffic tăng
+    ↓
+System vẫn hoạt động
+    ↓
+Booking không bị gián đoạn
+
+NFR05 – Reliability & Fault Tolerance
+Lỗi của một thành phần không được làm ảnh hưởng toàn bộ hệ thống.
+
+Ví dụ:
+
+Payment Provider lỗi
+        ↓
+Payment Failed
+        ↓
+Thông báo Customer
+        ↓
+Cho phép Retry
+        ↓
+Booking/Trip vẫn hoạt động
+
+Tương tự với Notification Provider:
+
+Notification lỗi
+        ↓
+Retry / Queue
+        ↓
+Không làm dừng Booking
+
+4. Security Requirements
+NFR06 – Data Security
+Phải bảo vệ:
+
+Customer Information.
+Driver Information.
+Vehicle Information.
+Location Data.
+Transaction Data.
+NFR07 – Authentication
+Các đối tượng phải được xác thực trước khi sử dụng chức năng yêu cầu tài khoản:
+
+Customer.
+Driver.
+Operations Staff.
+Administrator.
+NFR08 – Authorization
+Áp dụng Role-Based Access Control (RBAC).
+
+Customer
+   ↓
+Customer Functions
+
+Driver
+   ↓
+Driver Functions
+
+Operations Staff
+   ↓
+Operation Functions
+
+Administrator
+   ↓
+Administrative Functions
+
+NFR09 – Payment Data Privacy
+CAB System không lưu trực tiếp:
+
+Số thẻ.
+CVV.
+Mật khẩu ngân hàng.
+Thông tin thanh toán nhạy cảm.
+Thông tin thanh toán được xử lý thông qua Payment Provider.
+
+5. Audit & Logging
+NFR10 – Auditability
+Các thao tác quan trọng phải được ghi nhận:
+
+Thông tin	Ví dụ
+User	Administrator01
+Action	Update Driver
+Entity	Driver
+Time	2026-08-20 10:30
+Result	Success
+
+Mục đích:
+
+Điều tra sự cố.
+Kiểm tra hoạt động.
+Hỗ trợ Audit.
+Truy vết thao tác quản trị.
+6. Maintainability & Extensibility
+NFR11 – Maintainability
+Hệ thống cần được thiết kế theo hướng module hóa:
+
+Identity
+Customer
+Driver
+Vehicle
+Booking
+Driver Matching
+Trip
+Fare
+Payment
+Notification
+Rating
+Operation
+Reporting
+Audit
+
+Thay đổi một module không nên gây ảnh hưởng lớn đến các module khác.
+
+NFR12 – Extensibility
+Trong tương lai có thể bổ sung:
+
+Loại dịch vụ mới.
+Loại xe mới.
+Payment Provider mới.
+Notification Provider mới.
+SMS/Email/Push Channel mới.
+7. Deployability
+NFR13 – Independent Deployment
+Cho phép triển khai chức năng mới từng phần:
+
+Version 1
+    ↓
+Booking + Driver Matching
+    ↓
+Version 2
+    ↓
+Payment
+    ↓
+Version 3
+    ↓
+New Service
+
+Mục tiêu là hạn chế ảnh hưởng đến các chức năng đang hoạt động.
+
+8. Data Integrity
+NFR15 – Data Integrity
+Dữ liệu phải đảm bảo:
+
+Chính xác.
+Nhất quán.
+Không bị trùng lặp.
+Không bị mất trong quá trình xử lý.
+Đặc biệt đối với:
+
+Booking.
+Driver Assignment.
+Trip.
+Fare.
+Payment.
+Ví dụ: một Booking không được đồng thời được hai Driver nhận thành công.
+
+9. Monitoring
+NFR16 – Monitoring
+Hệ thống cần theo dõi:
+
+API Response Time.
+CPU/Memory.
+Số lượng Booking.
+Driver Matching Success Rate.
+Payment Success/Failure Rate.
+Notification Success/Failure Rate.
+Error Rate.
+System Availability.
+10. Backup & Recovery
+NFR17 – Backup & Recovery
+Dữ liệu quan trọng cần được backup và có khả năng phục hồi:
+
+Database
+    ↓
+Backup
+    ↓
+Backup Storage
+    ↓
+Recovery khi xảy ra sự cố
+
+Dữ liệu ưu tiên:
+
+Customer.
+Driver.
+Booking.
+Trip.
+Payment.
+Audit Log.
+11. Ma trận ưu tiên NFR
+Priority	Nhóm NFR
+🔴 Critical	Performance
+🔴 Critical	Driver Matching
+🔴 Critical	Scalability
+🔴 Critical	Availability
+🔴 Critical	Reliability
+🔴 Critical	Security
+🔴 Critical	Authorization
+🔴 Critical	Data Integrity
+🔴 Critical	Fault Tolerance
+🟠 High	Auditability
+🟠 High	Maintainability
+🟠 High	Extensibility
+🟠 High	Monitoring
+🟠 High	Backup & Recovery
+🟠 High	Deployability
+
+12. Các NFR cần xác nhận với khách hàng
+STT	Nội dung cần xác nhận
+1	Response Time tối đa là bao nhiêu giây?
+2	Driver Matching phải hoàn thành trong bao lâu?
+3	Số lượng Customer dự kiến?
+4	Số lượng Driver dự kiến?
+5	Số Booking tối đa trong giờ cao điểm?
+6	SLA/Availability yêu cầu bao nhiêu %?
+7	RTO – thời gian phục hồi hệ thống?
+8	RPO – lượng dữ liệu tối đa có thể mất?
+9	Thời gian lưu trữ dữ liệu?
+10	Thời gian lưu Location History?
+11	Chính sách Retry Payment/Notification?
+12	Yêu cầu bảo mật và Compliance cụ thể?
+
+13. Kết luận
+Các Non-Functional Requirements trọng yếu của CAB System:
+
+Performance → Scalability → Availability → Reliability → Security → Data Integrity → Maintainability → Extensibility
+
+Đây là cơ sở để chuyển sang các bước tiếp theo:
+
+Business Requirements
+        ↓
+Functional Requirements
+        ↓
+Business Rules
+        ↓
+Data Modeling
+        ↓
+Non-Functional Requirements
+        ↓
+Solution Architecture / System Design
+        ↓
+Development & Testing
