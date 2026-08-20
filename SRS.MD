@@ -1099,4 +1099,354 @@ Business Process cốt lõi của CAB System:
 Trong đó **Driver Matching** là quy trình trọng tâm cần ưu tiên phân tích chi tiết vì ảnh hưởng trực tiếp đến mục tiêu **BG01 – giảm thời gian tìm tài xế** và **BR01/BR02 – tự động tìm và phân công Driver**.
 
 Các quy trình như **Fare Calculation, Cancellation, Payment Failure và Network Failure** cần tiếp tục xác nhận Business Rules với khách hàng trước khi chuyển sang thiết kế chi tiết.
+bước 7: bussines requirement phân rã ra thành các functional requirement phân rã yêu cầu dịch vụ, thiết kế các functional requirement, ví dụ FR1 tìm vị trí của khách hàng, FR2 chọn những thằng tài xế online, FR3 chọn loại xe, ưu tiên chọn những tài xế đánh giá cao, làm theo dạng markdow
+# BƯỚC 7 – PHÂN RÃ BUSINESS REQUIREMENT THÀNH FUNCTIONAL REQUIREMENT
 
+## 1. Mục tiêu
+
+Phân rã các **Business Requirements (BR)** thành các **Functional Requirements (FR)** cụ thể để xác định hệ thống **phải làm gì** nhằm đáp ứng yêu cầu nghiệp vụ.
+
+### Luồng phân rã
+
+```text
+Business Goal (BG)
+        ↓
+Business Requirement (BR)
+        ↓
+Functional Requirement (FR)
+        ↓
+Use Case
+        ↓
+Acceptance Criteria
+```
+
+---
+
+# 2. Phân rã BR01 – Tự động tìm và phân công Driver
+
+### Business Requirement
+
+**BR01:** Hệ thống phải tự động tìm kiếm và phân công Driver phù hợp dựa trên vị trí, trạng thái sẵn sàng và các tiêu chí vận hành.
+
+### Functional Requirements
+
+| Mã | Functional Requirement | Diễn giải |
+|---|---|---|
+| **FR01** | Xác định vị trí Customer | Hệ thống phải xác định vị trí/điểm đón mà Customer cung cấp. |
+| **FR02** | Xác định danh sách Driver Online | Hệ thống phải lọc các Driver đang ở trạng thái sẵn sàng nhận chuyến. |
+| **FR03** | Lọc Driver theo loại xe | Hệ thống phải chỉ lựa chọn Driver có phương tiện phù hợp với loại xe Customer yêu cầu. |
+| **FR04** | Xác định khoảng cách Driver | Hệ thống phải tính khoảng cách giữa Driver và điểm đón của Customer. |
+| **FR05** | Ưu tiên Driver phù hợp | Hệ thống phải sắp xếp Driver dựa trên các tiêu chí được doanh nghiệp xác định. |
+| **FR06** | Ưu tiên Driver có đánh giá tốt | Hệ thống có thể ưu tiên Driver có Rating cao khi các điều kiện khác tương đương. |
+| **FR07** | Gửi yêu cầu chuyến đến Driver | Hệ thống phải gửi thông tin Booking đến Driver được lựa chọn. |
+| **FR08** | Nhận phản hồi Driver | Hệ thống phải ghi nhận kết quả Accept/Reject của Driver. |
+| **FR09** | Xử lý Driver không phản hồi | Hệ thống phải xác định Timeout khi Driver không phản hồi trong thời gian quy định. |
+| **FR10** | Tìm Driver tiếp theo | Khi Driver Reject hoặc Timeout, hệ thống phải tiếp tục tìm Driver phù hợp tiếp theo. |
+| **FR11** | Thông báo không tìm được Driver | Khi không còn Driver phù hợp, hệ thống phải thông báo cho Customer. |
+
+---
+
+# 3. Phân rã BR02 – Giảm thời gian tìm Driver
+
+### Business Requirement
+
+**BR02:** Hệ thống phải giảm thời gian từ khi Customer tạo Booking đến khi tìm được Driver.
+
+### Functional Requirements
+
+| Mã | Functional Requirement | Diễn giải |
+|---|---|---|
+| **FR12** | Tự động kích hoạt Driver Matching | Hệ thống phải bắt đầu tìm Driver ngay sau khi Booking được xác nhận. |
+| **FR13** | Tìm kiếm Driver theo vị trí | Hệ thống phải ưu tiên các Driver gần điểm đón. |
+| **FR14** | Xử lý Timeout tự động | Hệ thống phải tự động chuyển sang Driver tiếp theo khi hết thời gian phản hồi. |
+| **FR15** | Theo dõi trạng thái tìm Driver | Customer phải biết hệ thống đang trong quá trình tìm Driver. |
+| **FR16** | Cập nhật kết quả tìm Driver | Hệ thống phải cập nhật trạng thái khi Driver được phân công hoặc không tìm được Driver. |
+
+---
+
+# 4. Phân rã BR03 – Hỗ trợ thanh toán linh hoạt
+
+### Business Requirement
+
+**BR03:** Hệ thống phải hỗ trợ thanh toán bằng tiền mặt và thanh toán điện tử.
+
+### Functional Requirements
+
+| Mã | Functional Requirement | Diễn giải |
+|---|---|---|
+| **FR17** | Chọn phương thức thanh toán | Customer được lựa chọn Cash hoặc Online Payment. |
+| **FR18** | Tính số tiền phải thanh toán | Hệ thống phải xác định Fare sau khi Trip hoàn thành. |
+| **FR19** | Xử lý thanh toán tiền mặt | Hệ thống phải ghi nhận kết quả thanh toán tiền mặt. |
+| **FR20** | Tạo giao dịch thanh toán điện tử | Hệ thống phải gửi yêu cầu thanh toán đến Payment Provider. |
+| **FR21** | Nhận kết quả thanh toán | Hệ thống phải ghi nhận Success/Failed/Timeout từ Payment Provider. |
+| **FR22** | Thông báo thanh toán thất bại | Hệ thống phải thông báo cho Customer khi thanh toán không thành công. |
+| **FR23** | Cho phép Retry Payment | Hệ thống phải cho phép xử lý lại thanh toán theo chính sách doanh nghiệp. |
+| **FR24** | Lưu thông tin giao dịch | Hệ thống phải lưu thông tin giao dịch cần thiết nhưng không lưu dữ liệu thanh toán nhạy cảm. |
+
+---
+
+# 5. Phân rã BR04 – Nâng cao trải nghiệm Customer
+
+### Business Requirement
+
+**BR04:** Hệ thống phải cho phép Customer theo dõi và quản lý toàn bộ chuyến đi.
+
+### Functional Requirements
+
+| Mã | Functional Requirement | Diễn giải |
+|---|---|---|
+| **FR25** | Đăng ký tài khoản | Customer có thể tạo tài khoản. |
+| **FR26** | Đăng nhập | Customer có thể đăng nhập và xác thực. |
+| **FR27** | Quản lý thông tin cá nhân | Customer có thể xem và cập nhật hồ sơ. |
+| **FR28** | Nhập điểm đón | Customer có thể nhập/xác nhận điểm đón. |
+| **FR29** | Nhập điểm đến | Customer có thể nhập/xác nhận điểm đến. |
+| **FR30** | Chọn loại xe | Customer có thể lựa chọn loại xe/dịch vụ. |
+| **FR31** | Tạo Booking | Customer có thể gửi yêu cầu đặt xe. |
+| **FR32** | Theo dõi trạng thái Trip | Customer có thể xem trạng thái hiện tại của chuyến. |
+| **FR33** | Xem thông tin Driver | Customer có thể xem thông tin Driver được phân công. |
+| **FR34** | Xem ETA | Hệ thống hiển thị thời gian dự kiến Driver đến điểm đón. |
+| **FR35** | Xem lịch sử Trip | Customer có thể xem lịch sử các chuyến đã thực hiện. |
+| **FR36** | Xem Fare | Customer có thể xem số tiền phải trả cho Trip. |
+| **FR37** | Đánh giá Driver | Customer có thể đánh giá Driver sau khi Trip hoàn thành. |
+
+---
+
+# 6. Phân rã BR05 – Nâng cao hiệu quả vận hành
+
+### Business Requirement
+
+**BR05:** Hệ thống phải cung cấp công cụ quản lý và giám sát cho bộ phận Operations.
+
+### Functional Requirements
+
+| Mã | Functional Requirement | Diễn giải |
+|---|---|---|
+| **FR38** | Quản lý Customer | Operations có thể xem và quản lý thông tin Customer. |
+| **FR39** | Quản lý Driver | Operations có thể quản lý hồ sơ và trạng thái Driver. |
+| **FR40** | Quản lý Vehicle | Operations có thể quản lý thông tin phương tiện. |
+| **FR41** | Theo dõi Trip | Operations có thể xem các Trip đang diễn ra. |
+| **FR42** | Theo dõi trạng thái Driver | Operations có thể kiểm tra trạng thái hoạt động của Driver. |
+| **FR43** | Xử lý Trip lỗi | Operations có thể hỗ trợ xử lý các trường hợp Trip phát sinh lỗi. |
+| **FR44** | Tra cứu giao dịch | Operations có thể tra cứu lịch sử giao dịch. |
+
+---
+
+# 7. Phân rã BR06 – Cung cấp Notification
+
+### Business Requirement
+
+**BR06:** Hệ thống phải gửi thông báo kịp thời cho Customer và Driver.
+
+### Functional Requirements
+
+| Mã | Functional Requirement | Diễn giải |
+|---|---|---|
+| **FR45** | Gửi Notification Booking | Thông báo khi Booking được tiếp nhận. |
+| **FR46** | Gửi Notification Driver | Thông báo cho Driver khi có chuyến mới. |
+| **FR47** | Thông báo Driver nhận chuyến | Thông báo cho Customer khi Driver Accept. |
+| **FR48** | Thông báo Driver đến | Thông báo cho Customer khi Driver đến điểm đón. |
+| **FR49** | Thông báo hoàn thành Trip | Thông báo khi Trip hoàn thành. |
+| **FR50** | Thông báo Payment | Thông báo kết quả thanh toán. |
+| **FR51** | Hỗ trợ nhiều Notification Channel | Hệ thống có khả năng tích hợp Push/SMS/Email hoặc kênh khác. |
+| **FR52** | Retry Notification | Hệ thống phải có cơ chế xử lý khi gửi Notification thất bại. |
+
+---
+
+# 8. Phân rã BR07 – Khả năng mở rộng
+
+### Business Requirement
+
+**BR07:** Hệ thống phải có khả năng mở rộng và dễ dàng bổ sung các dịch vụ mới.
+
+### Functional Requirements
+
+| Mã | Functional Requirement | Diễn giải |
+|---|---|---|
+| **FR53** | Quản lý loại dịch vụ | Hệ thống cho phép quản lý nhiều loại dịch vụ/loại xe. |
+| **FR54** | Hỗ trợ nhiều Payment Provider | Có khả năng tích hợp thêm Payment Provider trong tương lai. |
+| **FR55** | Hỗ trợ nhiều Notification Provider | Có khả năng thay đổi hoặc bổ sung Notification Provider. |
+| **FR56** | Tách biệt các chức năng nghiệp vụ | Các module nghiệp vụ có thể phát triển và mở rộng độc lập. |
+
+---
+
+# 9. Phân rã BR08 – An toàn và bảo mật
+
+### Business Requirement
+
+**BR08:** Hệ thống phải bảo vệ dữ liệu và kiểm soát quyền truy cập.
+
+### Functional Requirements
+
+| Mã | Functional Requirement | Diễn giải |
+|---|---|---|
+| **FR57** | Authentication | Xác thực Customer, Driver và Staff trước khi sử dụng chức năng yêu cầu đăng nhập. |
+| **FR58** | Authorization | Kiểm soát quyền truy cập theo Role/Permission. |
+| **FR59** | Bảo vệ dữ liệu cá nhân | Kiểm soát việc truy cập và sử dụng thông tin cá nhân. |
+| **FR60** | Bảo vệ dữ liệu vị trí | Kiểm soát quyền truy cập dữ liệu vị trí Driver. |
+| **FR61** | Audit Log | Ghi nhận các thao tác quản trị quan trọng. |
+
+---
+
+# 10. Phân rã BR09 – Reporting
+
+### Business Requirement
+
+**BR09:** Hệ thống phải cung cấp dữ liệu phục vụ quản lý và đánh giá hoạt động.
+
+### Functional Requirements
+
+| Mã | Functional Requirement | Diễn giải |
+|---|---|---|
+| **FR62** | Báo cáo số lượng Trip | Thống kê số lượng Trip theo khoảng thời gian. |
+| **FR63** | Báo cáo doanh thu | Thống kê doanh thu từ các Trip. |
+| **FR64** | Báo cáo tỷ lệ hoàn thành | Thống kê tỷ lệ Trip hoàn thành. |
+| **FR65** | Báo cáo tỷ lệ hủy | Thống kê tỷ lệ Trip bị hủy. |
+| **FR66** | Báo cáo hiệu quả Driver | Thống kê các chỉ số hoạt động của Driver. |
+
+---
+
+# 11. Phân rã BR10 – Tính tin cậy của hệ thống
+
+### Business Requirement
+
+**BR10:** Lỗi của Payment hoặc Notification không được làm dừng toàn bộ hệ thống.
+
+### Functional Requirements
+
+| Mã | Functional Requirement | Diễn giải |
+|---|---|---|
+| **FR67** | Xử lý Payment Failure | Hệ thống phải xử lý trạng thái Payment thất bại mà không làm mất Trip. |
+| **FR68** | Xử lý Payment Timeout | Hệ thống phải xử lý trường hợp Payment Provider không phản hồi. |
+| **FR69** | Retry Payment | Cho phép thực hiện lại Payment theo chính sách. |
+| **FR70** | Xử lý Notification Failure | Lỗi Notification không được làm gián đoạn quy trình Booking/Trip. |
+| **FR71** | Retry Notification | Hệ thống có thể gửi lại Notification thất bại. |
+
+---
+
+# 12. Tổng hợp Functional Requirements
+
+| BR | Nhóm chức năng | FR |
+|---|---|---|
+| **BR01** | Driver Matching | FR01 – FR11 |
+| **BR02** | Tối ưu thời gian tìm Driver | FR12 – FR16 |
+| **BR03** | Payment | FR17 – FR24 |
+| **BR04** | Customer Experience | FR25 – FR37 |
+| **BR05** | Operations | FR38 – FR44 |
+| **BR06** | Notification | FR45 – FR52 |
+| **BR07** | Scalability & Extensibility | FR53 – FR56 |
+| **BR08** | Security & Authorization | FR57 – FR61 |
+| **BR09** | Reporting | FR62 – FR66 |
+| **BR10** | Reliability | FR67 – FR71 |
+
+---
+
+# 13. Ví dụ chi tiết – Driver Matching
+
+Đây là nhóm Functional Requirements cần ưu tiên phân tích sâu nhất:
+
+```mermaid
+flowchart TD
+    START["Customer tạo Booking"]
+    START --> FR01["FR01<br/>Xác định vị trí Customer"]
+    FR01 --> FR02["FR02<br/>Lọc Driver Online/Available"]
+    FR02 --> FR03["FR03<br/>Lọc theo loại xe"]
+    FR03 --> FR04["FR04<br/>Tính khoảng cách"]
+    FR04 --> FR05["FR05<br/>Xếp hạng Driver"]
+
+    FR05 --> FR06["FR06<br/>Ưu tiên Driver Rating cao"]
+    FR06 --> FR07["FR07<br/>Gửi yêu cầu cho Driver"]
+
+    FR07 --> RESPONSE{"Driver phản hồi?"}
+
+    RESPONSE -->|Accept| ASSIGN["Gán Driver<br/>cho Booking"]
+    RESPONSE -->|Reject| NEXT["Tìm Driver tiếp theo"]
+    RESPONSE -->|Timeout| NEXT
+
+    NEXT --> FR02
+
+    ASSIGN --> SUCCESS["Thông báo Customer<br/>Driver đã nhận chuyến"]
+
+    NEXT --> CHECK{"Còn Driver phù hợp?"}
+    CHECK -->|Có| FR02
+    CHECK -->|Không| FAIL["Thông báo Customer<br/>Không tìm được Driver"]
+```
+
+---
+
+# 14. Traceability – BR → FR
+
+```mermaid
+flowchart LR
+    BR01["BR01<br/>Tự động tìm & phân công Driver"]
+    BR02["BR02<br/>Giảm thời gian tìm Driver"]
+    BR03["BR03<br/>Thanh toán linh hoạt"]
+    BR04["BR04<br/>Trải nghiệm Customer"]
+    BR05["BR05<br/>Hiệu quả vận hành"]
+
+    FR01["FR01<br/>Xác định vị trí"]
+    FR02["FR02<br/>Lọc Driver Online"]
+    FR03["FR03<br/>Lọc loại xe"]
+    FR05["FR05<br/>Xếp hạng Driver"]
+    FR06["FR06<br/>Ưu tiên Rating"]
+    FR10["FR10<br/>Tìm Driver tiếp theo"]
+
+    FR17["FR17<br/>Chọn Payment"]
+    FR20["FR20<br/>Payment Online"]
+    FR23["FR23<br/>Retry Payment"]
+
+    FR31["FR31<br/>Tạo Booking"]
+    FR32["FR32<br/>Theo dõi Trip"]
+    FR34["FR34<br/>Xem ETA"]
+
+    FR38["FR38<br/>Quản lý Customer"]
+    FR39["FR39<br/>Quản lý Driver"]
+    FR41["FR41<br/>Theo dõi Trip"]
+
+    BR01 --> FR01
+    BR01 --> FR02
+    BR01 --> FR03
+    BR01 --> FR05
+    BR01 --> FR06
+    BR01 --> FR10
+
+    BR02 --> FR02
+    BR02 --> FR10
+
+    BR03 --> FR17
+    BR03 --> FR20
+    BR03 --> FR23
+
+    BR04 --> FR31
+    BR04 --> FR32
+    BR04 --> FR34
+
+    BR05 --> FR38
+    BR05 --> FR39
+    BR05 --> FR41
+```
+
+---
+
+# 15. Kết luận
+
+Sau Bước 7, yêu cầu đã được phân rã theo cấu trúc:
+
+```text
+Business Goal
+      ↓
+Business Requirement
+      ↓
+Functional Requirement
+      ↓
+Use Case
+      ↓
+Acceptance Criteria
+      ↓
+Test Case
+```
+
+Trong đó, nhóm **Driver Matching** cần được ưu tiên đặc tả chi tiết vì liên quan trực tiếp đến mục tiêu quan trọng của CAB:
+
+> **Xác định vị trí Customer → Lọc Driver Online → Lọc loại xe → Tính khoảng cách → Xếp hạng Driver → Ưu tiên Driver phù hợp → Gửi yêu cầu → Accept / Reject / Timeout → Tìm Driver tiếp theo → Thông báo Customer.**
+
+> **Lưu ý:** Việc “ưu tiên Driver có Rating cao” hiện nên được xem là **đề xuất nghiệp vụ cần xác nhận với khách hàng**, chưa nên coi là Business Rule chính thức nếu khách hàng chưa phê duyệt.
